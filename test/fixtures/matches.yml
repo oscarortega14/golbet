@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tournament: one
+  home_team: MyString
+  away_team: MyString
+  kickoff_at: 2026-06-01 22:52:58
+  home_score: 1
+  away_score: 1
+  status: MyString
+
+two:
+  tournament: two
+  home_team: MyString
+  away_team: MyString
+  kickoff_at: 2026-06-01 22:52:58
+  home_score: 1
+  away_score: 1
+  status: MyString
