@@ -58,9 +58,6 @@
   --radius-sm: calc(var(--radius) - 4px);
 }
 
-/* `:root` carries the base palette too, so the app is never left unstyled if
-   `data-theme` is ever absent, unknown, or clobbered (e.g. by stale JS). */
-:root,
 [data-theme="green"] {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
@@ -84,6 +81,11 @@
   --popover-foreground: 240 10% 3.9%;
 }
 
+/* Golbet commits to a dark "stadium" look: :root carries the dark palette so
+   the app stays dark and legible regardless of data-mode (or stale cached JS).
+   Higher-specificity / later source order keeps :root winning over the light
+   [data-theme=green] block above. */
+:root,
 [data-theme="green"][data-mode="dark"],
 [data-mode="dark"] [data-theme="green"]:not([data-mode="light"]) {
   --background: 20 14.3% 4.1%;
