@@ -58,6 +58,9 @@
   --radius-sm: calc(var(--radius) - 4px);
 }
 
+/* `:root` carries the base palette too, so the app is never left unstyled if
+   `data-theme` is ever absent, unknown, or clobbered (e.g. by stale JS). */
+:root,
 [data-theme="green"] {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;

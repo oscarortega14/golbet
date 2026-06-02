@@ -706,3 +706,137 @@ Processing by SessionsController#new as */*
 Completed 200 OK in 2ms (Views: 0.8ms | ActiveRecord: 0.1ms (1 query, 0 cached) | GC: 0.0ms)
 
 
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:38:52 -0500
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Polla'*/[0m
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.3ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 4.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 17.4ms | GC: 8.9ms)
+Completed 200 OK in 38ms (Views: 20.1ms | ActiveRecord: 1.3ms (5 queries, 0 cached) | GC: 9.1ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:38:57 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 5.8ms | GC: 1.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.6ms | GC: 1.6ms)
+Completed 200 OK in 14ms (Views: 6.8ms | ActiveRecord: 0.7ms (5 queries, 0 cached) | GC: 2.2ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:38:58 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 4.0ms | GC: 0.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.9ms | GC: 0.6ms)
+Completed 200 OK in 10ms (Views: 5.2ms | ActiveRecord: 0.4ms (5 queries, 0 cached) | GC: 0.6ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:38:59 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 4.6ms | GC: 0.5ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.7ms | GC: 0.8ms)
+Completed 200 OK in 12ms (Views: 6.2ms | ActiveRecord: 0.6ms (5 queries, 0 cached) | GC: 0.8ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:38:59 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 19.4ms | GC: 14.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 20.9ms | GC: 15.4ms)
+Completed 200 OK in 26ms (Views: 21.2ms | ActiveRecord: 0.6ms (5 queries, 0 cached) | GC: 15.7ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:39:00 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.2ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.2ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 15.2ms | GC: 9.8ms)
+  Rendered layout layouts/application.html.erb (Duration: 16.4ms | GC: 10.2ms)
+Completed 200 OK in 33ms (Views: 18.5ms | ActiveRecord: 0.8ms (5 queries, 0 cached) | GC: 17.7ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:39:01 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.8ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 5.0ms | GC: 1.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.9ms | GC: 1.2ms)
+Completed 200 OK in 21ms (Views: 6.1ms | ActiveRecord: 1.4ms (5 queries, 0 cached) | GC: 8.6ms)
+
+
