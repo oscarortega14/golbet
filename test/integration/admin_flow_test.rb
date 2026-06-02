@@ -37,4 +37,25 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     assert_select "input[name=?]", "match[home_team]"
     assert_select "input[name=?]", "match[kickoff_at]"
   end
+
+  test "admin enters a result, match becomes finished and scoring reflects it" do
+    t = Tournament.create!(name: "Torneo")
+    m = t.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.hour.ago)
+    ana = Player.create!(name: "Ana")
+    Prediction.new(player: ana, match: m, home_pred: 2, away_pred: 1).save!(validate: false)
+
+    post admin_login_path, params: { password: "test-admin-pw" }
+    patch admin_result_path(m), params: { home_score: 2, away_score: 1 }
+    assert_redirected_to admin_results_path
+
+    m.reload
+    assert m.finished?
+    assert_equal 3, ScoringService.points_for(ana.predictions.first, m)
+  end
+
+  test "results admin page lists matches" do
+    post admin_login_path, params: { password: "test-admin-pw" }
+    get admin_results_path
+    assert_response :success
+  end
 end
