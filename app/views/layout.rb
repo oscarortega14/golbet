@@ -11,7 +11,7 @@ class Views::Layout < Views::Base
         h1(class: "text-2xl font-bold mb-4") { "⚽ Polla Futbolera" }
         render_nav if @active
       end
-      main(&block)
+      div(&block)
       render Components::UI::Toaster.new
     end
   end
