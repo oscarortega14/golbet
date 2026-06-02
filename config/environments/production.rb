@@ -6,6 +6,9 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.enable_reloading = false
 
+  # Admin password (Task 11). Organizer must set ADMIN_PASSWORD in the environment.
+  config.x.admin_password = ENV.fetch("ADMIN_PASSWORD", nil)
+
   # Eager load code on boot for better performance and memory savings (ignored by Rake tasks).
   config.eager_load = true
 

@@ -6,6 +6,9 @@ Rails.application.configure do
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
+  # Admin password (Task 11).
+  config.x.admin_password = ENV.fetch("ADMIN_PASSWORD", "cambia-esto")
+
   # Do not eager load code on boot.
   config.eager_load = false
 
