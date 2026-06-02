@@ -56,4 +56,14 @@ class ScoringServiceTest < ActiveSupport::TestCase
     assert_equal ["Ana", "Beto"], rows.map { |r| r[:player].name }
     assert_equal [6, 1], rows.map { |r| r[:points] }
   end
+
+  test "standings excludes players with no predictions on finished matches" do
+    m = finished_match(1, 0)
+    Player.create!(name: "NoPreds")
+    scorer = Player.create!(name: "Scorer")
+    Prediction.new(player: scorer, match: m, home_pred: 1, away_pred: 0).save!(validate: false)
+    names = ScoringService.standings(@tournament).map { |r| r[:player].name }
+    assert_includes names, "Scorer"
+    assert_not_includes names, "NoPreds"
+  end
 end

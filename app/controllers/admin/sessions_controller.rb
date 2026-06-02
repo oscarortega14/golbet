@@ -5,7 +5,8 @@ module Admin
     end
 
     def create
-      if ActiveSupport::SecurityUtils.secure_compare(params[:password].to_s, BaseController.admin_password.to_s)
+      configured = BaseController.admin_password.to_s
+      if configured.present? && ActiveSupport::SecurityUtils.secure_compare(params[:password].to_s, configured)
         session[:admin] = true
         redirect_to admin_matches_path
       else

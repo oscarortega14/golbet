@@ -7,6 +7,9 @@ class Match < ApplicationRecord
   validates :home_team, :away_team, presence: true
   validates :kickoff_at, presence: true
   validates :status, inclusion: { in: STATUSES }
+  validates :home_score, :away_score,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0 },
+            if: :finished?
 
   after_initialize { self.status ||= "scheduled" }
 

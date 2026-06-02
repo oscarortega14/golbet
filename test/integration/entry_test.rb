@@ -14,4 +14,11 @@ class EntryTest < ActionDispatch::IntegrationTest
     end
     assert_response :redirect
   end
+
+  test "blank name re-renders the entry form without creating a player" do
+    assert_no_difference -> { Player.count } do
+      post session_path, params: { name: "" }
+    end
+    assert_response :unprocessable_entity
+  end
 end

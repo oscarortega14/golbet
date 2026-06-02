@@ -5,8 +5,12 @@ class SessionsController < ApplicationController
   end
 
   def create
-    player = Player.create!(name: params[:name])
-    cookies.signed.permanent[:player_token] = player.session_token
-    redirect_to predictions_path
+    player = Player.new(name: params[:name])
+    if player.save
+      cookies.signed.permanent[:player_token] = player.session_token
+      redirect_to predictions_path
+    else
+      render Views::Sessions::New.new, status: :unprocessable_entity
+    end
   end
 end

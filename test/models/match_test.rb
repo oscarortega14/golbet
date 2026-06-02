@@ -11,7 +11,8 @@ class MatchTest < ActiveSupport::TestCase
   end
 
   test "finished? reflects status" do
-    m = tournament.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.day.from_now, status: "finished")
+    m = tournament.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.day.from_now,
+                                   status: "finished", home_score: 2, away_score: 1)
     assert m.finished?
   end
 

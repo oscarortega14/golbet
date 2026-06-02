@@ -58,4 +58,26 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     get admin_results_path
     assert_response :success
   end
+
+  test "blank configured password never grants admin (even with blank submission)" do
+    original = Rails.application.config.x.admin_password
+    Rails.application.config.x.admin_password = nil
+    begin
+      post admin_login_path, params: { password: "" }
+      assert_response :unauthorized
+      get admin_matches_path
+      assert_redirected_to admin_login_path
+    ensure
+      Rails.application.config.x.admin_password = original
+    end
+  end
+
+  test "finishing a match with blank scores is rejected, match stays scheduled" do
+    t = Tournament.create!(name: "Torneo")
+    m = t.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.hour.ago)
+    post admin_login_path, params: { password: "test-admin-pw" }
+    patch admin_result_path(m), params: { home_score: "", away_score: "" }
+    m.reload
+    assert_not m.finished?, "match should not be finished with blank scores"
+  end
 end
