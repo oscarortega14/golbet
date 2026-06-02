@@ -1,9 +1,8 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Idempotent seed data for local play.
+t = Tournament.first_or_create!(name: "Mundial 2026")
+
+if t.matches.empty?
+  t.matches.create!(home_team: "Argentina", away_team: "Brasil",  kickoff_at: 2.days.from_now)
+  t.matches.create!(home_team: "España",     away_team: "Francia", kickoff_at: 3.days.from_now)
+  t.matches.create!(home_team: "Uruguay",    away_team: "Chile",   kickoff_at: 4.days.from_now)
+end

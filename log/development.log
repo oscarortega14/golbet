@@ -130,3 +130,14 @@ Migrating to AddUniqueIndexToPredictions (20260602040055)
   [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260602040055') RETURNING "version" /*application='Polla'*/[0m
   [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Polla'*/[0m
   [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Polla'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Polla'*/[0m
+  [1m[36mTournament Create (0.6ms)[0m  [1m[32mINSERT INTO "tournaments" ("name", "created_at", "updated_at") VALUES ('Test', '2026-06-02 12:20:57.114389', '2026-06-02 12:20:57.114389') RETURNING "id" /*application='Polla'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Polla'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Polla'*/[0m
+  [1m[36mMatch Create (0.5ms)[0m  [1m[32mINSERT INTO "matches" ("tournament_id", "home_team", "away_team", "kickoff_at", "home_score", "away_score", "status", "created_at", "updated_at") VALUES (1, 'ARG', 'BRA', '2026-06-02 14:20:57.119531', NULL, NULL, 'scheduled', '2026-06-02 12:20:57.122227', '2026-06-02 12:20:57.122227') RETURNING "id" /*application='Polla'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Polla'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Polla'*/[0m
+  [1m[36mTournament Load (0.3ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*application='Polla'*/[0m
+  [1m[36mMatch Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*application='Polla'*/[0m
+  [1m[36mTournament Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "tournaments" /*application='Polla'*/[0m
+  [1m[36mMatch Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "matches" /*application='Polla'*/[0m
