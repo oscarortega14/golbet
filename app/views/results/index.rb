@@ -7,6 +7,7 @@ class Views::Results::Index < Views::Base
 
   def view_template
     render Views::Layout.new(active: :results) do
+      page_header("Resultados", "Marcadores finales y los puntos que sumaste.")
       if @rows.empty?
         render Components::UI::Alert.new { "Todavía no hay resultados." }
       else

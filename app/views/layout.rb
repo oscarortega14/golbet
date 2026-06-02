@@ -6,29 +6,38 @@ class Views::Layout < Views::Base
   end
 
   def view_template(&block)
-    div(class: "max-w-3xl mx-auto p-4") do
-      header(class: "mb-6") do
-        h1(class: "text-2xl font-bold mb-4") { "⚽ Golbet" }
-        render_nav if @active
+    div(class: "gb-stage min-h-screen") do
+      header(class: "sticky top-0 z-30 border-b border-white/5 bg-background/70 backdrop-blur") do
+        div(class: "mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3") do
+          brand
+          render_nav if @active
+        end
       end
-      div(&block)
+      main(class: "mx-auto max-w-3xl px-4 py-8", &block)
       render Components::UI::Toaster.new
     end
   end
 
   private
 
-  def render_nav
-    nav(class: "flex gap-2 border-b mb-4") do
-      tab_link("Pronósticos", predictions_path, :predictions)
-      tab_link("Ranking", standings_path, :standings)
-      tab_link("Resultados", results_path, :results)
+  def brand
+    a(href: predictions_path, class: "inline-flex shrink-0 items-center gap-2 font-display text-lg text-foreground") do
+      span(class: "inline-block h-2.5 w-2.5 rounded-full bg-primary gb-glow-sm")
+      span { "Golbet" }
     end
   end
 
-  def tab_link(label, path, key)
+  def render_nav
+    nav(class: "flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1") do
+      pill("Pronósticos", predictions_path, :predictions)
+      pill("Ranking", standings_path, :standings)
+      pill("Resultados", results_path, :results)
+    end
+  end
+
+  def pill(label, path, key)
     active = @active == key
-    a(href: path,
-      class: "px-3 py-2 text-sm #{active ? 'border-b-2 border-primary font-medium' : 'text-muted-foreground'}") { label }
+    state = active ? "bg-primary text-primary-foreground gb-glow-sm" : "text-muted-foreground hover:text-foreground"
+    a(href: path, class: "rounded-full px-3.5 py-1.5 text-sm font-medium transition #{state}") { label }
   end
 end

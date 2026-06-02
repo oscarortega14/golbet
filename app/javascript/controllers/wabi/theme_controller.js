@@ -14,7 +14,7 @@ export default class extends Controller {
     // "default" — a fresh Wabi install may only have one palette installed
     // (here: "green"), and clobbering the SSR theme leaves CSS vars undefined.
     const storedTheme = localStorage.getItem(this.themeKeyValue) || html.dataset.theme || "default"
-    const storedMode  = localStorage.getItem(this.modeKeyValue) || this.systemMode()
+    const storedMode  = localStorage.getItem(this.modeKeyValue) || html.dataset.mode || this.systemMode()
     html.dataset.theme = storedTheme
     html.dataset.mode  = storedMode
   }

@@ -8,6 +8,7 @@ class Views::Standings::Index < Views::Base
 
   def view_template
     render Views::Layout.new(active: :standings) do
+      page_header("Ranking", "Los que más saben de fútbol, hasta arriba.")
       render Components::UI::DataTable.new do
         render Components::UI::Table.new do
           render Components::UI::TableCaption.new { "Ranking de Golbet" }

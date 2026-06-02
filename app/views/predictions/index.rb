@@ -9,6 +9,7 @@ class Views::Predictions::Index < Views::Base
 
   def view_template
     render Views::Layout.new(active: :predictions) do
+      page_header("Tus pronósticos", "Clava los marcadores antes del pitazo inicial.")
       render_flash
       if @matches.empty?
         render Components::UI::Alert.new { "Aún no hay partidos cargados." }
