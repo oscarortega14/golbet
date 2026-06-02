@@ -10,7 +10,7 @@ class Views::Standings::Index < Views::Base
     render Views::Layout.new(active: :standings) do
       render Components::UI::DataTable.new do
         render Components::UI::Table.new do
-          render Components::UI::TableCaption.new { "Ranking de la polla" }
+          render Components::UI::TableCaption.new { "Ranking de Golbet" }
           render Components::UI::TableHeader.new do
             render Components::UI::TableRow.new do
               render Components::UI::TableHead.new { "#" }

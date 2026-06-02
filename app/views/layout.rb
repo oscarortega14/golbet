@@ -8,7 +8,7 @@ class Views::Layout < Views::Base
   def view_template(&block)
     div(class: "max-w-3xl mx-auto p-4") do
       header(class: "mb-6") do
-        h1(class: "text-2xl font-bold mb-4") { "⚽ Polla Futbolera" }
+        h1(class: "text-2xl font-bold mb-4") { "⚽ Golbet" }
         render_nav if @active
       end
       div(&block)

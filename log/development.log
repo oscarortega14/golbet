@@ -840,3 +840,410 @@ Processing by PredictionsController#index as HTML
 Completed 200 OK in 21ms (Views: 6.1ms | ActiveRecord: 1.4ms (5 queries, 0 cached) | GC: 8.6ms)
 
 
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:04 -0500
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Polla'*/[0m
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 4.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 17.9ms | GC: 9.2ms)
+Completed 200 OK in 36ms (Views: 20.4ms | ActiveRecord: 1.0ms (5 queries, 0 cached) | GC: 9.2ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:06 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 3.7ms | GC: 0.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.9ms | GC: 0.6ms)
+Completed 200 OK in 17ms (Views: 6.4ms | ActiveRecord: 0.4ms (3 queries, 0 cached) | GC: 1.2ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:06 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 4.4ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.3ms | GC: 0.2ms)
+Completed 200 OK in 12ms (Views: 5.6ms | ActiveRecord: 0.5ms (5 queries, 0 cached) | GC: 0.7ms)
+
+
+Started GET "/results" for 127.0.0.1 at 2026-06-02 11:44:07 -0500
+Processing by ResultsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:5:in 'ResultsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:7:in 'ResultsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' ORDER BY "matches"."kickoff_at" DESC /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:8:in 'Enumerable#map'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Results::Index within layouts/application
+  Rendered Views::Results::Index within layouts/application (Duration: 1.5ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.6ms | GC: 0.3ms)
+Completed 200 OK in 11ms (Views: 4.1ms | ActiveRecord: 0.5ms (4 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:07 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.2ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 16.3ms | GC: 11.8ms)
+  Rendered layout layouts/application.html.erb (Duration: 18.8ms | GC: 13.5ms)
+Completed 200 OK in 27ms (Views: 19.2ms | ActiveRecord: 0.7ms (5 queries, 0 cached) | GC: 13.9ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:08 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 3.6ms | GC: 2.7ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.9ms | GC: 4.2ms)
+Completed 200 OK in 21ms (Views: 7.2ms | ActiveRecord: 0.4ms (3 queries, 0 cached) | GC: 12.1ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:09 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.2ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 16.2ms | GC: 11.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 17.7ms | GC: 12.0ms)
+Completed 200 OK in 30ms (Views: 17.9ms | ActiveRecord: 0.6ms (5 queries, 0 cached) | GC: 18.6ms)
+
+
+Started GET "/results" for 127.0.0.1 at 2026-06-02 11:44:09 -0500
+Processing by ResultsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:5:in 'ResultsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:7:in 'ResultsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' ORDER BY "matches"."kickoff_at" DESC /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:8:in 'Enumerable#map'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Results::Index within layouts/application
+  Rendered Views::Results::Index within layouts/application (Duration: 0.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.4ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 2.0ms | ActiveRecord: 0.4ms (4 queries, 0 cached) | GC: 0.7ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:10 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 4.7ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.5ms | GC: 0.6ms)
+Completed 200 OK in 14ms (Views: 5.8ms | ActiveRecord: 0.6ms (5 queries, 0 cached) | GC: 1.0ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:10 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 0.8ms | GC: 0.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.8ms | GC: 0.1ms)
+Completed 200 OK in 8ms (Views: 2.2ms | ActiveRecord: 0.4ms (3 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:10 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 3.9ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.1ms | GC: 0.3ms)
+Completed 200 OK in 11ms (Views: 5.5ms | ActiveRecord: 0.4ms (5 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:11 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 0.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.9ms | GC: 0.0ms)
+Completed 200 OK in 7ms (Views: 2.4ms | ActiveRecord: 0.3ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/results" for 127.0.0.1 at 2026-06-02 11:44:12 -0500
+Processing by ResultsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:5:in 'ResultsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:7:in 'ResultsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' ORDER BY "matches"."kickoff_at" DESC /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:8:in 'Enumerable#map'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Results::Index within layouts/application
+  Rendered Views::Results::Index within layouts/application (Duration: 0.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.6ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 2.1ms | ActiveRecord: 0.6ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/standings?sort=asc" for 127.0.0.1 at 2026-06-02 11:44:13 -0500
+Processing by StandingsController#index as HTML
+  Parameters: {"sort" => "asc"}
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.2ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 0.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.7ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 2.2ms | ActiveRecord: 0.4ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/standings?sort=desc" for 127.0.0.1 at 2026-06-02 11:44:13 -0500
+Processing by StandingsController#index as HTML
+  Parameters: {"sort" => "desc"}
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 1.1ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.9ms | GC: 0.4ms)
+Completed 200 OK in 7ms (Views: 2.4ms | ActiveRecord: 0.3ms (3 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:14 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.2ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 1.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.2ms | GC: 0.0ms)
+Completed 200 OK in 11ms (Views: 2.7ms | ActiveRecord: 0.5ms (3 queries, 0 cached) | GC: 0.8ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:15 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 1.2ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.3ms | GC: 0.2ms)
+Completed 200 OK in 9ms (Views: 2.7ms | ActiveRecord: 0.4ms (3 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/results" for 127.0.0.1 at 2026-06-02 11:44:15 -0500
+Processing by ResultsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:5:in 'ResultsController#index'
+  [1m[36mPrediction Load (0.2ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:7:in 'ResultsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' ORDER BY "matches"."kickoff_at" DESC /*action='index',application='Polla',controller='results'*/[0m
+  ↳ app/controllers/results_controller.rb:8:in 'Enumerable#map'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Results::Index within layouts/application
+  Rendered Views::Results::Index within layouts/application (Duration: 0.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.4ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 2.0ms | ActiveRecord: 0.5ms (4 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:15 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 0.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.0ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 2.6ms | ActiveRecord: 0.4ms (3 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:16 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.2ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 4.3ms | GC: 0.5ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.0ms | GC: 0.5ms)
+Completed 200 OK in 13ms (Views: 5.3ms | ActiveRecord: 0.6ms (5 queries, 0 cached) | GC: 1.0ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:33 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.1ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.8ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 2.3ms | ActiveRecord: 0.3ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:34 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.1ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 3.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.8ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 4.1ms | ActiveRecord: 0.5ms (5 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 11:44:34 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.2ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:13:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Polla',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:17:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 5.0ms | GC: 1.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.7ms | GC: 1.4ms)
+Completed 200 OK in 24ms (Views: 6.0ms | ActiveRecord: 0.6ms (5 queries, 0 cached) | GC: 12.9ms)
+
+
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 11:44:34 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.2ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = '07f4952d9b5a9f4d172344c2818f5e7f' LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/controllers/standings_controller.rb:5:in 'StandingsController#index'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 AND "matches"."status" = 'finished' /*action='index',application='Polla',controller='standings'*/[0m
+  ↳ app/services/scoring_service.rb:24:in 'ScoringService.standings'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 1.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.0ms | GC: 0.0ms)
+Completed 200 OK in 7ms (Views: 2.5ms | ActiveRecord: 0.3ms (3 queries, 0 cached) | GC: 0.2ms)
+
+
