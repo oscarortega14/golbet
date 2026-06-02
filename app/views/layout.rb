@@ -7,10 +7,13 @@ class Views::Layout < Views::Base
 
   def view_template(&block)
     div(class: "gb-stage min-h-screen") do
-      header(class: "sticky top-0 z-30 border-b border-white/5 bg-background/70 backdrop-blur") do
+      header(class: "sticky top-0 z-30 border-b border-border bg-background/70 backdrop-blur") do
         div(class: "mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3") do
           brand
-          render_nav if @active
+          div(class: "flex items-center gap-2") do
+            render_nav if @active
+            theme_toggle
+          end
         end
       end
       main(class: "mx-auto max-w-3xl px-4 py-8", &block)
@@ -28,7 +31,7 @@ class Views::Layout < Views::Base
   end
 
   def render_nav
-    nav(class: "flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1") do
+    nav(class: "flex items-center gap-1 rounded-full border border-border bg-muted/40 p-1") do
       pill("Pronósticos", predictions_path, :predictions)
       pill("Ranking", standings_path, :standings)
       pill("Resultados", results_path, :results)

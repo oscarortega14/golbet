@@ -31,26 +31,27 @@ body {
   text-transform: uppercase;
 }
 
-/* Floodlit stadium backdrop: layered green glows over near-black */
+/* Floodlit stadium backdrop: layered green glows over the theme background,
+   so it reads in both dark ("estadio nocturno") and light ("daytime pitch"). */
 .gb-stage {
   position: relative;
   isolation: isolate;
   background:
-    radial-gradient(120% 80% at 50% -20%, hsl(var(--gb-green) / 0.22), transparent 55%),
-    radial-gradient(90% 60% at 90% 10%, hsl(var(--gb-green) / 0.10), transparent 60%),
-    radial-gradient(80% 70% at 5% 90%, hsl(160 80% 40% / 0.08), transparent 60%),
-    hsl(var(--gb-ink));
+    radial-gradient(120% 80% at 50% -20%, hsl(var(--gb-green) / 0.18), transparent 55%),
+    radial-gradient(90% 60% at 90% 10%, hsl(var(--gb-green) / 0.09), transparent 60%),
+    radial-gradient(80% 70% at 5% 90%, hsl(160 80% 40% / 0.07), transparent 60%),
+    hsl(var(--background));
 }
 
-/* Faint pitch-line horizon */
+/* Faint pitch-line horizon — uses foreground so it shows on light & dark */
 .gb-stage::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   background-image:
-    linear-gradient(to right, hsl(0 0% 100% / 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, hsl(0 0% 100% / 0.04) 1px, transparent 1px);
+    linear-gradient(to right, hsl(var(--foreground) / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--foreground) / 0.05) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(80% 60% at 50% 30%, black, transparent 75%);
 }
@@ -92,10 +93,16 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  border: 1px solid hsl(0 0% 100% / 0.12);
+  border: 1px solid hsl(var(--foreground) / 0.14);
   border-radius: 999px;
   padding: 0.3rem 0.8rem;
   font-size: 0.8rem;
-  color: hsl(0 0% 100% / 0.7);
-  background: hsl(0 0% 100% / 0.03);
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--foreground) / 0.04);
 }
+
+/* Light/dark toggle: show the icon for the action available in the
+   CURRENT mode (sun while dark = "go light", moon while light = "go dark"). */
+.gb-when-dark, .gb-when-light { display: none; }
+[data-mode="dark"] .gb-when-dark { display: inline-flex; }
+[data-mode="light"] .gb-when-light { display: inline-flex; }

@@ -5,8 +5,11 @@ class Views::Sessions::New < Views::Base
     main(class: "gb-stage gb-grain min-h-screen flex flex-col") do
       header(class: "flex items-center justify-between px-6 py-5") do
         brand
-        a(href: "#jugar",
-          class: "text-sm text-muted-foreground hover:text-foreground transition") { "¿Cómo funciona?" }
+        div(class: "flex items-center gap-3") do
+          a(href: "#jugar",
+            class: "text-sm text-muted-foreground hover:text-foreground transition") { "¿Cómo funciona?" }
+          theme_toggle
+        end
       end
 
       section(id: "jugar", class: "flex-1 flex items-center px-6 pb-16") do
@@ -31,7 +34,7 @@ class Views::Sessions::New < Views::Base
             input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
             input(type: "text", name: "name", id: "name", required: true,
                   placeholder: "Tu nombre",
-                  class: "flex-1 h-12 rounded-xl bg-card border border-white/10 px-4 text-foreground " \
+                  class: "flex-1 h-12 rounded-xl bg-card border border-border px-4 text-foreground " \
                          "placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary")
             button(type: "submit",
                    class: "gb-glow h-12 shrink-0 rounded-xl bg-primary px-6 font-semibold " \

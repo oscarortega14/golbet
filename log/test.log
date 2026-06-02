@@ -22870,3 +22870,965 @@ PredictionTest: test_one_prediction_per_player_per_match
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
   [1m[36mPrediction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "predictions" WHERE "predictions"."match_id" = ? AND "predictions"."player_id" = ? LIMIT ?[0m  [["match_id", 1], ["player_id", 1], ["LIMIT", 1]]
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.2ms)[0m  [1m[31mDELETE FROM "matches";
+DELETE FROM "players";
+DELETE FROM "predictions";
+DELETE FROM "tournaments"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------
+PlayerTest: test_session_token_is_unique
+----------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.1ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.719861"], ["name", "A"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.719861"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------------
+PlayerTest: test_generates_a_session_token_on_create
+----------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.720985"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.720985"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------
+PlayerTest: test_requires_a_name
+--------------------------------
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+AdminFlowTest: test_new_match_form_renders_fields
+-------------------------------------------------
+Started POST "/admin/login" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::SessionsController#create as HTML
+  Parameters: {"password" => "[FILTERED]"}
+Redirected to http://www.example.com/admin/matches
+Completed 302 Found in 3ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.1ms)
+Started GET "/admin/matches/new" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::MatchesController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Admin::Matches::Form within layouts/application
+  Rendered Views::Admin::Matches::Form within layouts/application (Duration: 1.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.6ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 6.0ms | ActiveRecord: 0.1ms (0 queries, 0 cached) | GC: 0.1ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------
+AdminFlowTest: test_admin_creates_a_match
+-----------------------------------------
+Started POST "/admin/login" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::SessionsController#create as HTML
+  Parameters: {"password" => "[FILTERED]"}
+Redirected to http://www.example.com/admin/matches
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mMatch Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "matches"[0m
+Started POST "/admin/matches" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::MatchesController#create as HTML
+  Parameters: {"match" => {"home_team" => "ARG", "away_team" => "BRA", "kickoff_at" => "2026-06-03T22:45"}}
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.1ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.773175"], ["name", "Torneo"], ["updated_at", "2026-06-02 22:45:35.773175"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.1ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.774954"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-03 22:45:00"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.774954"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/admin/matches
+Completed 302 Found in 3ms (ActiveRecord: 0.2ms (3 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mMatch Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "matches"[0m
+Started GET "/admin/matches" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::MatchesController#index as HTML
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Admin::Matches::Index within layouts/application
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? ORDER BY "matches"."kickoff_at" ASC[0m  [["tournament_id", 1]]
+  Rendered Views::Admin::Matches::Index within layouts/application (Duration: 0.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.5ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------------
+AdminFlowTest: test_results_admin_page_lists_matches
+----------------------------------------------------
+Started POST "/admin/login" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::SessionsController#create as HTML
+  Parameters: {"password" => "[FILTERED]"}
+Redirected to http://www.example.com/admin/matches
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+Started GET "/admin/results" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::ResultsController#index as HTML
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.1ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.777925"], ["name", "Torneo"], ["updated_at", "2026-06-02 22:45:35.777925"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Admin::Results::Index within layouts/application
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? ORDER BY "matches"."kickoff_at" ASC[0m  [["tournament_id", 1]]
+  Rendered Views::Admin::Results::Index within layouts/application (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.3ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.1ms (3 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------
+AdminFlowTest: test_admin_pages_require_login
+---------------------------------------------
+Started GET "/admin/matches" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::MatchesController#index as HTML
+Redirected to http://www.example.com/admin/login
+Filter chain halted as :require_admin rendered or redirected
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------------------------------------
+AdminFlowTest: test_admin_enters_a_result,_match_becomes_finished_and_scoring_reflects_it
+-----------------------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.1ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.787161"], ["name", "Torneo"], ["updated_at", "2026-06-02 22:45:35.787161"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.787635"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 21:45:35.787443"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.787635"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.788028"], ["name", "Ana"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.788028"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.1ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.789499"], ["home_pred", 2], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.789499"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/admin/login" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::SessionsController#create as HTML
+  Parameters: {"password" => "[FILTERED]"}
+Redirected to http://www.example.com/admin/matches
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+Started PATCH "/admin/results/1" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::ResultsController#update as HTML
+  Parameters: {"home_score" => "2", "away_score" => "1", "id" => "1"}
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Update (0.0ms)[0m  [1m[33mUPDATE "matches" SET "away_score" = ?, "home_score" = ?, "status" = ?, "updated_at" = ? WHERE "matches"."id" = ?[0m  [["away_score", 1], ["home_score", 2], ["status", "finished"], ["updated_at", "2026-06-02 22:45:35.791006"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/admin/results
+Completed 302 Found in 1ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.2ms)
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ? ORDER BY "predictions"."id" ASC LIMIT ?[0m  [["player_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------
+AdminFlowTest: test_wrong_password_is_rejected
+----------------------------------------------
+Started POST "/admin/login" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::SessionsController#create as HTML
+  Parameters: {"password" => "[FILTERED]"}
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Admin::Login within layouts/application
+  Rendered Views::Admin::Login within layouts/application (Duration: 0.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.8ms | GC: 0.0ms)
+Completed 401 Unauthorized in 1ms (Views: 1.0ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.2ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------------------
+AdminFlowTest: test_correct_password_reaches_matches_admin
+----------------------------------------------------------
+Started POST "/admin/login" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::SessionsController#create as HTML
+  Parameters: {"password" => "[FILTERED]"}
+Redirected to http://www.example.com/admin/matches
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------------------------------------------------
+AdminFlowTest: test_finishing_a_match_with_blank_scores_is_rejected,_match_stays_scheduled
+------------------------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.1ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.794593"], ["name", "Torneo"], ["updated_at", "2026-06-02 22:45:35.794593"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.1ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.794947"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 21:45:35.794799"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.794947"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/admin/login" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::SessionsController#create as HTML
+  Parameters: {"password" => "[FILTERED]"}
+Redirected to http://www.example.com/admin/matches
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+Started PATCH "/admin/results/1" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::ResultsController#update as HTML
+  Parameters: {"home_score" => "", "away_score" => "", "id" => "1"}
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+Redirected to http://www.example.com/admin/results
+Completed 302 Found in 1ms (ActiveRecord: 0.0ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------------------------------
+AdminFlowTest: test_blank_configured_password_never_grants_admin_(even_with_blank_submission)
+---------------------------------------------------------------------------------------------
+Started POST "/admin/login" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::SessionsController#create as HTML
+  Parameters: {"password" => "[FILTERED]"}
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Admin::Login within layouts/application
+  Rendered Views::Admin::Login within layouts/application (Duration: 0.4ms | GC: 0.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.5ms | GC: 0.1ms)
+Completed 401 Unauthorized in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.1ms)
+Started GET "/admin/matches" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by Admin::MatchesController#index as HTML
+Redirected to http://www.example.com/admin/login
+Filter chain halted as :require_admin rendered or redirected
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+ResultsTest: test_shows_an_empty-state_alert_when_no_finished_matches
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.1ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.798455"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.798455"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.798768"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.798631"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.798768"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Update (0.0ms)[0m  [1m[33mUPDATE "matches" SET "status" = ?, "updated_at" = ? WHERE "matches"."id" = ?[0m  [["status", "scheduled"], ["updated_at", "2026-06-02 22:45:35.798998"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Oscar"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.799946"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.799946"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 1ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/results" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by ResultsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ?[0m  [["player_id", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? AND "matches"."status" = ? ORDER BY "matches"."kickoff_at" DESC[0m  [["tournament_id", 1], ["status", "finished"]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Results::Index within layouts/application
+  Rendered Views::Results::Index within layouts/application (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.1ms (4 queries, 0 cached) | GC: 0.1ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------
+ResultsTest: test_requires_a_player
+-----------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.802553"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.802553"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.802939"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.802804"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.802939"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/results" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by ResultsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+Redirected to http://www.example.com/
+Filter chain halted as :require_player rendered or redirected
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------------------------
+ResultsTest: test_shows_'Sin_pronóstico'_when_player_did_not_predict
+--------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.803662"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.803662"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.803936"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.803816"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.803936"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Oscar"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.1ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.804430"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.804430"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.1ms)
+Started GET "/results" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by ResultsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ?[0m  [["player_id", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? AND "matches"."status" = ? ORDER BY "matches"."kickoff_at" DESC[0m  [["tournament_id", 1], ["status", "finished"]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Results::Index within layouts/application
+  Rendered Views::Results::Index within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.4ms | GC: 0.1ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms (4 queries, 0 cached) | GC: 0.1ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------------------------------
+ResultsTest: test_shows_finished_match_score_and_my_points_(exact_=_3)
+----------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.806103"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.806103"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.806379"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.806257"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.806379"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Oscar"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.806852"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.806852"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."name" = ? LIMIT ?[0m  [["name", "Oscar"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.807283"], ["home_pred", 2], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.807283"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/results" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by ResultsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ?[0m  [["player_id", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? AND "matches"."status" = ? ORDER BY "matches"."kickoff_at" DESC[0m  [["tournament_id", 1], ["status", "finished"]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Results::Index within layouts/application
+  Rendered Views::Results::Index within layouts/application (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.3ms | ActiveRecord: 0.0ms (4 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------
+ScoringServiceTest: test_exact_score_gives_3_points
+---------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.808738"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.808738"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.809018"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.809018"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.809279"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.809154"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.809279"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------------------
+ScoringServiceTest: test_correct_draw_but_wrong_score_gives_1_point
+-------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.809634"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.809634"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.809963"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.809963"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.1ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.810277"], ["home_score", 1], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.810141"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.810277"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------------------
+ScoringServiceTest: test_correct_home_win_but_wrong_score_gives_1_point
+-----------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.810669"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.810669"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.810957"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.810957"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.811214"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.811092"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.811214"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------
+ScoringServiceTest: test_wrong_outcome_gives_0_points
+-----------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.811565"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.811565"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.811838"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.811838"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.812086"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.811969"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.812086"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------------------------------
+ScoringServiceTest: test_standings_ranks_players_by_total_points_then_name
+--------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.812435"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.812435"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.812698"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.812698"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.812942"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.812828"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.812942"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 0], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.813234"], ["home_score", 0], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.813133"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.813234"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.813524"], ["name", "Ana"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.813524"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.813766"], ["name", "Beto"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.813766"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.813928"], ["home_pred", 2], ["match_id", 1], ["player_id", 2], ["updated_at", "2026-06-02 22:45:35.813928"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.814128"], ["home_pred", 0], ["match_id", 2], ["player_id", 2], ["updated_at", "2026-06-02 22:45:35.814128"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.814311"], ["home_pred", 1], ["match_id", 1], ["player_id", 3], ["updated_at", "2026-06-02 22:45:35.814311"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.814496"], ["home_pred", 1], ["match_id", 2], ["player_id", 3], ["updated_at", "2026-06-02 22:45:35.814496"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? AND "matches"."status" = ?[0m  [["tournament_id", 1], ["status", "finished"]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."match_id" IN (?, ?)[0m  [["match_id", 1], ["match_id", 2]]
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."id" IN (?, ?)[0m  [["id", 2], ["id", 3]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------------
+ScoringServiceTest: test_unfinished_match_gives_0_points
+--------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.815915"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.815915"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.816188"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.816188"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.816428"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 23:45:35.816322"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.816428"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------------------------------------------
+ScoringServiceTest: test_standings_excludes_players_with_no_predictions_on_finished_matches
+-------------------------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.816766"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.816766"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.817032"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.817032"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 0], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.817275"], ["home_score", 1], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.817161"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.817275"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.817570"], ["name", "NoPreds"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.817570"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.817814"], ["name", "Scorer"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.817814"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.817973"], ["home_pred", 1], ["match_id", 1], ["player_id", 3], ["updated_at", "2026-06-02 22:45:35.817973"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? AND "matches"."status" = ?[0m  [["tournament_id", 1], ["status", "finished"]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."match_id" = ?[0m  [["match_id", 1]]
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."id" = ?[0m  [["id", 3]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+StandingsTest: test_sort=asc_reverses_the_order_(Beto_with_1pt_first)
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.818667"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.818667"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.818932"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.818817"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.818932"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.819221"], ["name", "Ana"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.819221"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.819463"], ["name", "Beto"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.819463"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.819621"], ["home_pred", 2], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.819621"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.819798"], ["home_pred", 1], ["match_id", 1], ["player_id", 2], ["updated_at", "2026-06-02 22:45:35.819798"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Viewer"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.820342"], ["name", "Viewer"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.820342"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/standings?sort=asc" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by StandingsController#index as HTML
+  Parameters: {"sort" => "asc"}
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? AND "matches"."status" = ?[0m  [["tournament_id", 1], ["status", "finished"]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."match_id" = ?[0m  [["match_id", 1]]
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 1.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.5ms | ActiveRecord: 0.1ms (5 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------------------
+StandingsTest: test_ranking_lists_players_by_points_desc_by_default
+-------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.823784"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.823784"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.824081"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.823951"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.824081"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.824392"], ["name", "Ana"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.824392"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.824640"], ["name", "Beto"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.824640"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.824823"], ["home_pred", 2], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.824823"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.825013"], ["home_pred", 1], ["match_id", 1], ["player_id", 2], ["updated_at", "2026-06-02 22:45:35.825013"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Viewer"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.825519"], ["name", "Viewer"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.825519"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? AND "matches"."status" = ?[0m  [["tournament_id", 1], ["status", "finished"]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."match_id" = ?[0m  [["match_id", 1]]
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 0.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.5ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.1ms (5 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+StandingsTest: test_requires_a_player
+-------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.827398"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.827398"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.827684"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.827564"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.827684"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.827977"], ["name", "Ana"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.827977"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.828222"], ["name", "Beto"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.828222"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.828389"], ["home_pred", 2], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.828389"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.828576"], ["home_pred", 1], ["match_id", 1], ["player_id", 2], ["updated_at", "2026-06-02 22:45:35.828576"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+Redirected to http://www.example.com/
+Filter chain halted as :require_player rendered or redirected
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------------------------
+StandingsTest: test_the_Puntos_column_header_is_a_sort_toggle_link
+------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.829258"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.829258"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.829526"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 20:45:35.829404"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.829526"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.1ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.829825"], ["name", "Ana"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.829825"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.830164"], ["name", "Beto"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.830164"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.830359"], ["home_pred", 2], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.830359"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.830557"], ["home_pred", 1], ["match_id", 1], ["player_id", 2], ["updated_at", "2026-06-02 22:45:35.830557"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Viewer"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.831086"], ["name", "Viewer"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.831086"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/standings" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by StandingsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? AND "matches"."status" = ?[0m  [["tournament_id", 1], ["status", "finished"]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."match_id" = ?[0m  [["match_id", 1]]
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Standings::Index within layouts/application
+  Rendered Views::Standings::Index within layouts/application (Duration: 0.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.4ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.1ms (5 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+PredictionTest: test_requires_non-negative_scores
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.833423"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.833423"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.833732"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.833732"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.833995"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 23:45:35.833875"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.833995"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mPrediction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "predictions" WHERE "predictions"."match_id" = ? AND "predictions"."player_id" = ? LIMIT ?[0m  [["match_id", 1], ["player_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------------------
+PredictionTest: test_invalid_when_match_already_kicked_off
+----------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.834568"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.834568"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.834846"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.834846"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.835097"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 21:45:35.834980"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.835097"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mPrediction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "predictions" WHERE "predictions"."match_id" = ? AND "predictions"."player_id" = ? LIMIT ?[0m  [["match_id", 1], ["player_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------------
+PredictionTest: test_one_prediction_per_player_per_match
+--------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.835603"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.835603"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.835875"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.835875"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.836116"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 23:45:35.836009"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.836116"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "predictions" WHERE "predictions"."match_id" = ? AND "predictions"."player_id" = ? LIMIT ?[0m  [["match_id", 1], ["player_id", 1], ["LIMIT", 1]]
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 0], ["created_at", "2026-06-02 22:45:35.836489"], ["home_pred", 1], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.836489"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mPrediction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "predictions" WHERE "predictions"."match_id" = ? AND "predictions"."player_id" = ? LIMIT ?[0m  [["match_id", 1], ["player_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------
+PredictionTest: test_valid_for_a_match_before_kickoff
+-----------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.836933"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.836933"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.837207"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.837207"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.837446"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 23:45:35.837340"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.837446"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mPrediction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "predictions" WHERE "predictions"."match_id" = ? AND "predictions"."player_id" = ? LIMIT ?[0m  [["match_id", 1], ["player_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+PredictionsTest: test_player_saves_a_prediction_for_an_upcoming_match
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.838000"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.838000"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.838273"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-03 00:45:35.838159"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.838273"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Oscar"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.838789"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.838789"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."name" = ? LIMIT ?[0m  [["name", "Oscar"], ["LIMIT", 1]]
+Started POST "/predictions" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by PredictionsController#create as HTML
+  Parameters: {"match_id" => "1", "home_pred" => "2", "away_pred" => "1"}
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ? AND "predictions"."match_id" = ? LIMIT ?[0m  [["player_id", 1], ["match_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "predictions" WHERE "predictions"."match_id" = ? AND "predictions"."player_id" = ? LIMIT ?[0m  [["match_id", 1], ["player_id", 1], ["LIMIT", 1]]
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.840298"], ["home_pred", 2], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.840298"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 1ms (ActiveRecord: 0.1ms (5 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ? ORDER BY "predictions"."id" ASC LIMIT ?[0m  [["player_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------------------
+PredictionsTest: test_saving_again_updates_the_same_prediction_(upsert)
+-----------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.841038"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.841038"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.841328"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-03 00:45:35.841212"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.841328"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Oscar"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.841815"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.841815"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."name" = ? LIMIT ?[0m  [["name", "Oscar"], ["LIMIT", 1]]
+Started POST "/predictions" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by PredictionsController#create as HTML
+  Parameters: {"match_id" => "1", "home_pred" => "2", "away_pred" => "1"}
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ? AND "predictions"."match_id" = ? LIMIT ?[0m  [["player_id", 1], ["match_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPrediction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "predictions" WHERE "predictions"."match_id" = ? AND "predictions"."player_id" = ? LIMIT ?[0m  [["match_id", 1], ["player_id", 1], ["LIMIT", 1]]
+  [1m[36mPrediction Create (0.0ms)[0m  [1m[32mINSERT INTO "predictions" ("away_pred", "created_at", "home_pred", "match_id", "player_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_pred", 1], ["created_at", "2026-06-02 22:45:35.842888"], ["home_pred", 2], ["match_id", 1], ["player_id", 1], ["updated_at", "2026-06-02 22:45:35.842888"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 1ms (ActiveRecord: 0.1ms (5 queries, 0 cached) | GC: 0.0ms)
+Started POST "/predictions" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by PredictionsController#create as HTML
+  Parameters: {"match_id" => "1", "home_pred" => "3", "away_pred" => "0"}
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ? AND "predictions"."match_id" = ? LIMIT ?[0m  [["player_id", 1], ["match_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mPrediction Update (0.0ms)[0m  [1m[33mUPDATE "predictions" SET "away_pred" = ?, "home_pred" = ?, "updated_at" = ? WHERE "predictions"."id" = ?[0m  [["away_pred", 0], ["home_pred", 3], ["updated_at", "2026-06-02 22:45:35.844106"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 1ms (ActiveRecord: 0.2ms (5 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mPrediction Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "predictions" WHERE "predictions"."player_id" = ?[0m  [["player_id", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ? ORDER BY "predictions"."id" ASC LIMIT ?[0m  [["player_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------------------
+PredictionsTest: test_index_renders_an_upcoming_match_with_score_inputs
+-----------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.844906"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.844906"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.845174"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-03 00:45:35.845062"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.845174"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Oscar"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.845672"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.845672"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ?[0m  [["player_id", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = ? LIMIT ?[0m  [["tournament_id", 1], ["LIMIT", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? ORDER BY "matches"."kickoff_at" ASC[0m  [["tournament_id", 1]]
+  Rendered Views::Predictions::Index within layouts/application (Duration: 0.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.6ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.9ms | ActiveRecord: 0.1ms (5 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------------------
+PredictionsTest: test_locked_match_shows_Cerrado_and_no_inputs
+--------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.848120"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.848120"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "CHI"], ["created_at", "2026-06-02 22:45:35.848393"], ["home_score", nil], ["home_team", "URU"], ["kickoff_at", "2026-06-02 21:45:35.848282"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.848393"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Ana"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.848886"], ["name", "Ana"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.848886"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = ?[0m  [["player_id", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = ? LIMIT ?[0m  [["tournament_id", 1], ["LIMIT", 1]]
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = ? ORDER BY "matches"."kickoff_at" ASC[0m  [["tournament_id", 1]]
+  Rendered Views::Predictions::Index within layouts/application (Duration: 0.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.4ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.1ms (5 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------------------------------------
+PredictionsTest: test_requires_a_player_(redirects_to_root_when_not_logged_in)
+------------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.850566"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.850566"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+Redirected to http://www.example.com/
+Filter chain halted as :require_player rendered or redirected
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------
+MatchTest: test_locked?_is_true_once_kickoff_has_passed
+-------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.851306"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.851306"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.851572"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-02 21:45:35.851456"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.851572"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "CHI"], ["created_at", "2026-06-02 22:45:35.851828"], ["home_score", nil], ["home_team", "URU"], ["kickoff_at", "2026-06-02 23:45:35.851742"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.851828"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------
+MatchTest: test_defaults_to_scheduled_status
+--------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.852165"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.852165"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", nil], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.852422"], ["home_score", nil], ["home_team", "ARG"], ["kickoff_at", "2026-06-03 22:45:35.852313"], ["status", "scheduled"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.852422"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------
+MatchTest: test_finished?_reflects_status
+-----------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTournament Create (0.0ms)[0m  [1m[32mINSERT INTO "tournaments" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.852727"], ["name", "Mundial 2026"], ["updated_at", "2026-06-02 22:45:35.852727"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMatch Create (0.0ms)[0m  [1m[32mINSERT INTO "matches" ("away_score", "away_team", "created_at", "home_score", "home_team", "kickoff_at", "status", "tournament_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["away_score", 1], ["away_team", "BRA"], ["created_at", "2026-06-02 22:45:35.852997"], ["home_score", 2], ["home_team", "ARG"], ["kickoff_at", "2026-06-03 22:45:35.852877"], ["status", "finished"], ["tournament_id", 1], ["updated_at", "2026-06-02 22:45:35.852997"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------------------------------
+EntryTest: test_submitting_a_name_creates_a_player_and_sets_the_cookie
+----------------------------------------------------------------------
+  [1m[36mPlayer Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "players"[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => "Oscar"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mPlayer Create (0.0ms)[0m  [1m[32mINSERT INTO "players" ("created_at", "name", "session_token", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-06-02 22:45:35.853729"], ["name", "Oscar"], ["session_token", "[FILTERED]"], ["updated_at", "2026-06-02 22:45:35.853729"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/predictions
+Completed 302 Found in 0ms (ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mPlayer Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "players"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------------------------------------
+EntryTest: test_blank_name_re-renders_the_entry_form_without_creating_a_player
+------------------------------------------------------------------------------
+  [1m[36mPlayer Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "players"[0m
+Started POST "/session" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#create as HTML
+  Parameters: {"name" => ""}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mPlayer Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "players" WHERE "players"."session_token" = ? LIMIT ?[0m  [["session_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Sessions::New within layouts/application
+  Rendered Views::Sessions::New within layouts/application (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.3ms | GC: 0.0ms)
+Completed 422 Unprocessable Content in 4ms (Views: 0.5ms | ActiveRecord: 0.0ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mPlayer Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "players"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------
+EntryTest: test_root_renders_the_entry_form
+-------------------------------------------
+Started GET "/" for 127.0.0.1 at 2026-06-02 17:45:35 -0500
+Processing by SessionsController#new as HTML
+  [1m[36mPlayer Load (0.0ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Sessions::New within layouts/application
+  Rendered Views::Sessions::New within layouts/application (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.2ms | ActiveRecord: 0.0ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
