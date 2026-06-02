@@ -10,7 +10,10 @@ export default class extends Controller {
 
   connect() {
     const html = document.documentElement
-    const storedTheme = localStorage.getItem(this.themeKeyValue) || "default"
+    // Respect the server-rendered theme as the fallback instead of forcing
+    // "default" — a fresh Wabi install may only have one palette installed
+    // (here: "green"), and clobbering the SSR theme leaves CSS vars undefined.
+    const storedTheme = localStorage.getItem(this.themeKeyValue) || html.dataset.theme || "default"
     const storedMode  = localStorage.getItem(this.modeKeyValue) || this.systemMode()
     html.dataset.theme = storedTheme
     html.dataset.mode  = storedMode
