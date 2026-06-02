@@ -39,4 +39,21 @@ class ScoringServiceTest < ActiveSupport::TestCase
     m = @tournament.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.hour.from_now)
     assert_equal 0, ScoringService.points_for(predict(m, 2, 1), m)
   end
+
+  test "standings ranks players by total points then name" do
+    m1 = finished_match(2, 1)
+    m2 = finished_match(0, 0)
+    ana = Player.create!(name: "Ana")
+    beto = Player.create!(name: "Beto")
+    # Ana: exact on m1 (3) + exact draw on m2 (3) = 6
+    Prediction.new(player: ana, match: m1, home_pred: 2, away_pred: 1).save!(validate: false)
+    Prediction.new(player: ana, match: m2, home_pred: 0, away_pred: 0).save!(validate: false)
+    # Beto: outcome on m1 (1) + miss on m2 (0) = 1
+    Prediction.new(player: beto, match: m1, home_pred: 1, away_pred: 0).save!(validate: false)
+    Prediction.new(player: beto, match: m2, home_pred: 1, away_pred: 0).save!(validate: false)
+
+    rows = ScoringService.standings(@tournament)
+    assert_equal ["Ana", "Beto"], rows.map { |r| r[:player].name }
+    assert_equal [6, 1], rows.map { |r| r[:points] }
+  end
 end

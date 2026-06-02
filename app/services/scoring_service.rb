@@ -19,4 +19,17 @@ class ScoringService
   def self.sign(n)
     n <=> 0
   end
+
+  def self.standings(tournament)
+    finished = tournament.matches.where(status: "finished").to_a
+    by_match = finished.index_by(&:id)
+
+    totals = Hash.new(0)
+    Prediction.where(match_id: by_match.keys).includes(:player).each do |pred|
+      totals[pred.player] += points_for(pred, by_match[pred.match_id])
+    end
+
+    totals.map { |player, points| { player: player, points: points } }
+          .sort_by { |row| [-row[:points], row[:player].name] }
+  end
 end
