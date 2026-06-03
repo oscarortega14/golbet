@@ -2,7 +2,8 @@ class AccountsController < ApplicationController
   before_action :require_player
 
   def show
-    render plain: "Mi cuenta: #{current_player.name}" # placeholder; real view in Task 5
+    render Views::Accounts::Show.new(player: current_player,
+                                     flash: { notice: flash[:notice], alert: flash[:alert] })
   end
 
   def request_verification
