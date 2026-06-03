@@ -11,8 +11,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   get "magic/:token", to: "magic_links#consume", as: :magic
+  post "login", to: "magic_links#request_login"
   root "sessions#new"
-  resource :session, only: [:create]
+  resource :session, only: [:create, :destroy]
+  resource :account, only: [:show]
+  post "account/email", to: "accounts#request_verification"
   resources :predictions, only: [:index, :create]
   resources :results, only: [:index]
   resources :standings, only: [:index]

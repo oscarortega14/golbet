@@ -13,4 +13,9 @@ class SessionsController < ApplicationController
       render Views::Sessions::New.new, status: :unprocessable_entity
     end
   end
+
+  def destroy
+    cookies.delete(:player_token)
+    redirect_to root_path, notice: "Sesión cerrada."
+  end
 end
