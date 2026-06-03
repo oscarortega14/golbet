@@ -4,14 +4,25 @@ module Components
   module UI
     class CardContent < Wabi::Base
       variants do
-        base "p-6 pt-0"
+        base "px-6"
+
+        # `:with_header` (default) keeps the shadcn behavior: no top padding
+        # because CardContent sits below a CardHeader.
+        # `:standalone` adds symmetric vertical padding for header-less cards.
+        variant :padding, {
+          with_header: "pt-0 pb-6",
+          standalone:  "py-6"
+        }, default: :with_header
       end
 
-      def initialize(**attrs) = @attrs = attrs
+      def initialize(padding: nil, **attrs)
+        @padding = padding
+        @attrs   = attrs
+      end
 
       def view_template(&)
         user_class = @attrs.delete(:class)
-        div(**@attrs, class: merge_class(tokens, user_class), &)
+        div(**@attrs, class: merge_class(tokens(padding: @padding), user_class), &)
       end
     end
   end

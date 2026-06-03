@@ -23,7 +23,7 @@ class Views::Results::Index < Views::Base
   def result_card(row)
     m = row[:match]
     render Components::UI::Card.new do
-      div(class: "flex items-center justify-between gap-3 px-5 py-4") do
+      render Components::UI::CardContent.new(padding: :standalone, class: "flex items-center justify-between gap-3") do
         span(class: "font-medium") { "#{m.home_team} #{m.home_score} - #{m.away_score} #{m.away_team}" }
         if row[:prediction]
           span(class: "text-sm text-muted-foreground") { "Tu pronóstico: #{row[:prediction].home_pred}-#{row[:prediction].away_pred}" }

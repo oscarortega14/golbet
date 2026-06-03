@@ -3336,3 +3336,51 @@ Processing by PredictionsController#index as HTML
 Completed 200 OK in 27ms (Views: 9.1ms | ActiveRecord: 1.4ms (5 queries, 0 cached) | GC: 7.0ms)
 
 
+Started GET "/" for 127.0.0.1 at 2026-06-02 22:24:01 -0500
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Golbet'*/[0m
+Processing by SessionsController#new as HTML
+  [1m[36mPlayer Load (0.1ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = 'bfdb713938de545bc755ecb37746a7b0' LIMIT 1 /*action='new',application='Golbet',controller='sessions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+Redirected to http://localhost:3000/predictions
+↳ app/controllers/sessions_controller.rb:3:in 'SessionsController#new'
+Completed 302 Found in 13ms (ActiveRecord: 0.9ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 22:24:01 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.1ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = 'bfdb713938de545bc755ecb37746a7b0' LIMIT 1 /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.0ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (0.0ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 2 /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:14:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.0ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:18:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 5.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 21.3ms | GC: 11.7ms)
+Completed 200 OK in 35ms (Views: 24.4ms | ActiveRecord: 0.6ms (5 queries, 0 cached) | GC: 11.7ms)
+
+
+Started GET "/predictions" for 127.0.0.1 at 2026-06-02 22:24:04 -0500
+Processing by PredictionsController#index as HTML
+  [1m[36mPlayer Load (0.3ms)[0m  [1m[34mSELECT "players".* FROM "players" WHERE "players"."session_token" = 'bfdb713938de545bc755ecb37746a7b0' LIMIT 1 /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/controllers/application_controller.rb:12:in 'ApplicationController#current_player'
+  [1m[36mTournament Load (0.1ms)[0m  [1m[34mSELECT "tournaments".* FROM "tournaments" ORDER BY "tournaments"."id" ASC LIMIT 1 /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:5:in 'PredictionsController#index'
+  [1m[36mPrediction Load (1.1ms)[0m  [1m[34mSELECT "predictions".* FROM "predictions" WHERE "predictions"."player_id" = 2 /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/controllers/predictions_controller.rb:7:in 'PredictionsController#index'
+  Rendering layout layouts/application.html.erb
+  Rendering Views::Predictions::Index within layouts/application
+  [1m[36mMatch Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "matches" WHERE "matches"."tournament_id" = 1 LIMIT 1 /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:14:in 'block in Views::Predictions::Index#view_template'
+  [1m[36mMatch Load (0.1ms)[0m  [1m[34mSELECT "matches".* FROM "matches" WHERE "matches"."tournament_id" = 1 ORDER BY "matches"."kickoff_at" ASC /*action='index',application='Golbet',controller='predictions'*/[0m
+  ↳ app/views/predictions/index.rb:18:in 'block (2 levels) in Views::Predictions::Index#view_template'
+  Rendered Views::Predictions::Index within layouts/application (Duration: 5.9ms | GC: 1.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.8ms | GC: 1.4ms)
+Completed 200 OK in 17ms (Views: 7.2ms | ActiveRecord: 1.7ms (5 queries, 0 cached) | GC: 2.4ms)
+
+
