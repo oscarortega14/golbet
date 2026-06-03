@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get  "login", to: "sessions#new"
     post "login", to: "sessions#create"
-    resources :matches, only: [:index, :new, :create, :edit, :update]
+    resources :matches, only: [:index, :edit, :update]
     resources :results, only: [:index, :update]
   end
 end

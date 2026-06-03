@@ -1,26 +1,15 @@
 module Admin
   class MatchesController < BaseController
     def index
-      @tournament = Tournament.first_or_create!(name: "Torneo")
-      render Views::Admin::Matches::Index.new(tournament: @tournament)
-    end
-
-    def new
-      render Views::Admin::Matches::Form.new(match: Match.new)
-    end
-
-    def create
-      tournament = Tournament.first_or_create!(name: "Torneo")
-      match = tournament.matches.new(match_params)
-      if match.save
-        redirect_to admin_matches_path
-      else
-        render Views::Admin::Matches::Form.new(match: match), status: :unprocessable_entity
-      end
+      @tournament = Tournament.first || Tournament.create!(name: "Mundial 2026")
+      scope = @tournament.matches.includes(:home_team, :away_team).order(:kickoff_at)
+      scope = scope.where(stage: params[:stage]) if params[:stage].present?
+      scope = scope.where(group: params[:group]) if params[:group].present?
+      render Views::Admin::Matches::Index.new(tournament: @tournament, matches: scope, filters: params.slice(:stage, :group).to_unsafe_h)
     end
 
     def edit
-      render Views::Admin::Matches::Form.new(match: Match.find(params[:id]))
+      render Views::Admin::Matches::Form.new(match: Match.find(params[:id]), teams: teams)
     end
 
     def update
@@ -28,14 +17,16 @@ module Admin
       if match.update(match_params)
         redirect_to admin_matches_path
       else
-        render Views::Admin::Matches::Form.new(match: match), status: :unprocessable_entity
+        render Views::Admin::Matches::Form.new(match: match, teams: teams), status: :unprocessable_entity
       end
     end
 
     private
 
+    def teams = (Tournament.first&.teams&.order(:group, :name) || [])
+
     def match_params
-      params.require(:match).permit(:home_team, :away_team, :kickoff_at)
+      params.require(:match).permit(:home_team_id, :away_team_id, :kickoff_at, :stage, :group)
     end
   end
 end
