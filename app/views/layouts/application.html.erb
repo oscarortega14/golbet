@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html data-controller="wabi--theme" data-theme="green" data-mode="dark">
   <head>
+    <%# Anti-FOUC: apply the saved theme/mode BEFORE first paint so there's no
+        flash between the SSR default and the visitor's stored preference. %>
+    <script>
+      (function () {
+        try {
+          var d = document.documentElement;
+          var t = localStorage.getItem("wabi-theme"); if (t) d.dataset.theme = t;
+          var m = localStorage.getItem("wabi-mode");  if (m) d.dataset.mode  = m;
+        } catch (e) {}
+      })();
+    </script>
     <title><%= content_for(:title) || "Golbet" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
