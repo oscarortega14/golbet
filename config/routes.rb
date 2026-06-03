@@ -27,5 +27,6 @@ Rails.application.routes.draw do
     post "login", to: "sessions#create"
     resources :matches, only: [:index, :edit, :update]
     resources :results, only: [:index, :update]
+    resource :resolution, only: [:show, :update]
   end
 end
