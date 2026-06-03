@@ -32,7 +32,7 @@ class Views::Predictions::Index < Views::Base
   def match_card(match)
     pred = @predictions[match.id]
     render Components::UI::Card.new do
-      render Components::UI::CardContent.new(class: "flex items-center justify-between gap-3 py-4") do
+      div(class: "flex items-center justify-between gap-3 px-5 py-4") do
         span(class: "font-medium") { "#{match.home_team} vs #{match.away_team}" }
         if match.locked?
           render Components::UI::Badge.new(appearance: :secondary) { "Cerrado" }
