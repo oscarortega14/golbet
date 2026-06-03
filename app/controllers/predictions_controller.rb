@@ -1,11 +1,24 @@
 class PredictionsController < ApplicationController
   before_action :require_player
 
+  STAGE_LABELS = {
+    "group" => "Fase de grupos", "round_of_32" => "Dieciseisavos",
+    "round_of_16" => "Octavos", "quarter_final" => "Cuartos",
+    "semi_final" => "Semifinal", "third_place" => "Tercer puesto", "final" => "Final"
+  }.freeze
+
   def index
     @tournament = Tournament.first
-    @matches = @tournament ? @tournament.matches.order(:kickoff_at) : []
-    @predictions = current_player.predictions.index_by(&:match_id)
-    render Views::Predictions::Index.new(matches: @matches, predictions: @predictions, flash: flash)
+    matches = @tournament ? @tournament.matches.includes(:home_team, :away_team).order(:kickoff_at) : []
+    grouped = matches.group_by(&:stage)
+                     .sort_by { |stage, _| Match::STAGES.index(stage) }
+                     .to_h
+                     .transform_keys { |s| STAGE_LABELS[s] || s }
+    render Views::Predictions::Index.new(
+      grouped: grouped,
+      predictions: current_player.predictions.index_by(&:match_id),
+      flash: { notice: flash[:notice], alert: flash[:alert] }
+    )
   end
 
   def create

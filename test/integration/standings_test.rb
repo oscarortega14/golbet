@@ -3,7 +3,9 @@ require "test_helper"
 class StandingsTest < ActionDispatch::IntegrationTest
   setup do
     @t = Tournament.create!(name: "Mundial 2026")
-    @m = @t.matches.create!(home_team: "ARG", away_team: "BRA",
+    @arg = @t.teams.create!(name: "Argentina", code: "ARG", flag: "🇦🇷", group: "A")
+    @bra = @t.teams.create!(name: "Brasil", code: "BRA", flag: "🇧🇷", group: "A")
+    @m = @t.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
       kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
     @ana = Player.create!(name: "Ana")
     @beto = Player.create!(name: "Beto")
