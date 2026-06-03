@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resource :account, only: [:show]
   post "account/email", to: "accounts#request_verification"
   resources :predictions, only: [:index, :create]
+  resource :special_prediction, only: [:create]
   resources :results, only: [:index]
   resources :standings, only: [:index]
   resources :groups, only: [:index]
@@ -26,5 +27,6 @@ Rails.application.routes.draw do
     post "login", to: "sessions#create"
     resources :matches, only: [:index, :edit, :update]
     resources :results, only: [:index, :update]
+    resource :resolution, only: [:show, :update]
   end
 end

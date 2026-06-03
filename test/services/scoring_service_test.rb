@@ -68,4 +68,47 @@ class ScoringServiceTest < ActiveSupport::TestCase
     assert_includes names, "Scorer"
     assert_not_includes names, "NoPreds"
   end
+
+  test "match_points multiplies the base by the stage factor" do
+    final = @tournament.matches.create!(stage: "final", home_team: @arg, away_team: @bra,
+      kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
+    exact = Prediction.new(player: @player, match: final, home_pred: 2, away_pred: 1)
+    assert_equal 15, ScoringService.match_points(exact, final)   # 3 (exact) * 5 (final)
+
+    qf = @tournament.matches.create!(stage: "quarter_final", home_team: @arg, away_team: @bra,
+      kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
+    outcome = Prediction.new(player: @player, match: qf, home_pred: 3, away_pred: 0)
+    assert_equal 3, ScoringService.match_points(outcome, qf)     # 1 (outcome) * 3 (QF)
+  end
+
+  test "group stage keeps the base (x1)" do
+    g = @tournament.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
+      kickoff_at: 2.hours.ago, status: "finished", home_score: 1, away_score: 0)
+    exact = Prediction.new(player: @player, match: g, home_pred: 1, away_pred: 0)
+    assert_equal 3, ScoringService.match_points(exact, g)
+  end
+
+  test "special_points awards champion and top-scorer bonuses when resolved" do
+    sp = SpecialPrediction.new(champion_team: @arg, top_scorer: "Messi")
+    @tournament.update!(champion_team: @arg, top_scorer: "MÉSSI") # normalized match
+    assert_equal 25, ScoringService.special_points(sp, @tournament) # 15 + 10
+  end
+
+  test "special_points gives nothing before resolution or on a miss" do
+    sp = SpecialPrediction.new(champion_team: @bra, top_scorer: "Otro")
+    assert_equal 0, ScoringService.special_points(sp, @tournament)         # unresolved
+    @tournament.update!(champion_team: @arg, top_scorer: "Messi")
+    assert_equal 0, ScoringService.special_points(sp, @tournament)         # both wrong
+  end
+
+  test "standings adds the special bonus to a player's match points" do
+    g = @tournament.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
+      kickoff_at: 2.hours.ago, status: "finished", home_score: 1, away_score: 0)
+    Prediction.new(player: @player, match: g, home_pred: 1, away_pred: 0).save!(validate: false) # 3
+    # seed a special prediction past the start-lock (lock is a user-flow guard, not scoring):
+    SpecialPrediction.new(player: @player, tournament: @tournament, champion_team: @arg).save!(validate: false)
+    @tournament.update!(champion_team: @arg) # +15
+    row = ScoringService.standings(@tournament).find { |r| r[:player] == @player }
+    assert_equal 18, row[:points]   # 3 + 15
+  end
 end
