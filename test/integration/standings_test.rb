@@ -48,6 +48,23 @@ class StandingsTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", standings_path(sort: "asc")
   end
 
+  test "podium highlights the leader with a crown and points" do
+    login
+    get standings_path
+    assert_response :success
+    assert_match "🏆", response.body          # crown only renders on the podium leader
+    assert_match "3 pts", response.body        # Ana (leader) points shown on the podium
+  end
+
+  test "empty ranking shows a friendly message" do
+    Prediction.delete_all
+    @m.update!(status: "scheduled")
+    login
+    get standings_path
+    assert_response :success
+    assert_match "Aún no hay puntos", response.body
+  end
+
   test "requires a player" do
     get standings_path
     assert_redirected_to root_path

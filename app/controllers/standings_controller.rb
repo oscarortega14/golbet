@@ -3,10 +3,12 @@ class StandingsController < ApplicationController
 
   def index
     tournament = Tournament.first
-    rows = tournament ? ScoringService.standings(tournament) : []
+    ranking = tournament ? ScoringService.standings(tournament) : [] # points desc, name asc
+    podium = ranking.first(3)
+
     @sort_dir = params[:sort] == "asc" ? :asc : :desc
-    # ScoringService.standings already returns points desc, name asc.
-    rows = rows.sort_by { |r| [r[:points], r[:player].name] } if @sort_dir == :asc
-    render Views::Standings::Index.new(rows: rows, sort_dir: @sort_dir)
+    rows = @sort_dir == :asc ? ranking.sort_by { |r| [r[:points], r[:player].name] } : ranking
+
+    render Views::Standings::Index.new(rows: rows, sort_dir: @sort_dir, podium: podium)
   end
 end
