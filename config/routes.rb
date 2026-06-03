@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resource :account, only: [:show]
   post "account/email", to: "accounts#request_verification"
   resources :predictions, only: [:index, :create]
+  resource :special_prediction, only: [:create]
   resources :results, only: [:index]
   resources :standings, only: [:index]
   resources :groups, only: [:index]

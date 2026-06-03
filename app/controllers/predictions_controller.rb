@@ -14,9 +14,13 @@ class PredictionsController < ApplicationController
                      .sort_by { |stage, _| Match::STAGES.index(stage) }
                      .to_h
                      .transform_keys { |s| STAGE_LABELS[s] || s }
+    special = @tournament && current_player.special_predictions.find_or_initialize_by(tournament: @tournament)
     render Views::Predictions::Index.new(
       grouped: grouped,
       predictions: current_player.predictions.index_by(&:match_id),
+      special: special,
+      teams: @tournament ? @tournament.teams.order(:group, :name) : [],
+      tournament: @tournament,
       flash: { notice: flash[:notice], alert: flash[:alert] }
     )
   end

@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class Views::Predictions::Index < Views::Base
-  def initialize(grouped:, predictions:, flash: {})
+  def initialize(grouped:, predictions:, special: nil, teams: [], tournament: nil, flash: {})
     @grouped = grouped
     @predictions = predictions
+    @special = special
+    @teams = teams
+    @tournament = tournament
     @flash = flash
   end
 
@@ -11,6 +14,7 @@ class Views::Predictions::Index < Views::Base
     render Views::Layout.new(active: :predictions) do
       page_header("Tus pronósticos", "Clava los marcadores antes del pitazo inicial.")
       render_flash
+      special_card if @special
       if @grouped.empty?
         render Components::UI::Alert.new { "Aún no hay partidos cargados." }
       else
@@ -23,6 +27,58 @@ class Views::Predictions::Index < Views::Base
   end
 
   private
+
+  def special_card
+    locked = @tournament&.started?
+    render Components::UI::Card.new(class: "mb-8") do
+      render Components::UI::CardContent.new(padding: :standalone, class: "space-y-3") do
+        h3(class: "font-display text-xl text-foreground") { "🏆 Tu predicción especial" }
+        locked ? special_readonly : special_form
+      end
+    end
+  end
+
+  def special_form
+    form(action: special_prediction_path, method: "post", class: "space-y-3") do
+      input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
+      render Components::UI::Label.new(for_: "champion_team_id") { "Campeón" }
+      select(name: "champion_team_id", id: "champion_team_id",
+             class: "block w-full rounded-md border border-border bg-card px-3 py-2") do
+        option(value: "") { "— Elige un equipo —" }
+        @teams.each do |team|
+          attrs = { value: team.id }
+          attrs[:selected] = true if team.id == @special.champion_team_id
+          option(**attrs) { "#{team.flag} #{team.name}" }
+        end
+      end
+      render Components::UI::Label.new(for_: "top_scorer") { "Goleador del torneo" }
+      render Components::UI::Input.new(type: "text", name: "top_scorer", id: "top_scorer",
+        value: @special.top_scorer, placeholder: "Nombre del jugador")
+      render Components::UI::Button.new(type: "submit", appearance: :primary) { "Guardar predicción" }
+    end
+  end
+
+  def special_readonly
+    div(class: "text-sm space-y-1") do
+      p { "Campeón: #{champion_line}" }
+      p { "Goleador: #{scorer_line}" }
+    end
+  end
+
+  def champion_line
+    pick = @special.champion_team
+    return "—" unless pick
+    real = @tournament.champion_team
+    mark = real ? (real.id == pick.id ? " ✓" : " ✗") : ""
+    "#{pick.flag} #{pick.name}#{mark}"
+  end
+
+  def scorer_line
+    return "—" if @special.top_scorer.blank?
+    real = @tournament.top_scorer
+    mark = real ? (SpecialPrediction.normalize(real) == SpecialPrediction.normalize(@special.top_scorer) ? " ✓" : " ✗") : ""
+    "#{@special.top_scorer}#{mark}"
+  end
 
   def render_flash
     msg = @flash[:notice] || @flash[:alert]
