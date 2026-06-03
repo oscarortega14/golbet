@@ -1,0 +1,10 @@
+<% if @purpose == :verify %>
+Verifica y confirma tu cuenta en Golbet.
+<% else %>
+Inicia sesión en tu cuenta de Golbet.
+<% end %>
+
+Haz clic en este enlace (válido por 20 minutos):
+<%= @url %>
+
+Si no fuiste tú, ignora este correo.

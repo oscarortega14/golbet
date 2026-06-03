@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
+  get "magic/:token", to: "magic_links#consume", as: :magic
   root "sessions#new"
   resource :session, only: [:create]
   resources :predictions, only: [:index, :create]
