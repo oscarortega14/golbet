@@ -12,6 +12,7 @@ class Views::Layout < Views::Base
           brand
           div(class: "flex items-center gap-2") do
             render_nav if @active
+            a(href: account_path, class: "text-sm text-muted-foreground hover:text-foreground transition") { "Mi cuenta" }
             theme_toggle
           end
         end

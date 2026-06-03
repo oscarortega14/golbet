@@ -41,6 +41,16 @@ class Views::Sessions::New < Views::Base
                           "text-primary-foreground transition hover:brightness-110") { "Entrar ▸" }
           end
 
+          div(class: "mt-6 text-sm text-muted-foreground gb-rise", style: "animation-delay:.6s") do
+            p(class: "mb-2") { "¿Ya tienes cuenta?" }
+            form(action: login_path, method: "post", class: "flex items-center gap-2 max-w-md") do
+              input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
+              input(type: "email", name: "email", placeholder: "tu@email.com", required: true,
+                    class: "flex-1 h-10 rounded-lg bg-card border border-border px-3 text-foreground placeholder:text-muted-foreground")
+              button(type: "submit", class: "h-10 shrink-0 rounded-lg border border-border px-4 text-foreground hover:bg-muted") { "Enviar link" }
+            end
+          end
+
           div(class: "mt-10 flex flex-wrap gap-3 gb-rise", style: "animation-delay:.58s") do
             stat("3·1·0", "puntos por acierto")
             stat("⚡", "ranking al instante")

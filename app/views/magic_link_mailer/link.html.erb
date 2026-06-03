@@ -1,0 +1,8 @@
+<h1>⚽ Golbet</h1>
+<% if @purpose == :verify %>
+  <p>Verifica y confirma tu cuenta para guardar tus pronósticos.</p>
+<% else %>
+  <p>Inicia sesión en tu cuenta de Golbet.</p>
+<% end %>
+<p><a href="<%= @url %>">Entrar a Golbet</a></p>
+<p>El enlace es válido por 20 minutos. Si no fuiste tú, ignora este correo.</p>
