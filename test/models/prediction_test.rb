@@ -4,14 +4,16 @@ class PredictionTest < ActiveSupport::TestCase
   setup do
     @tournament = Tournament.create!(name: "Mundial 2026")
     @player = Player.create!(name: "Oscar")
+    @arg = @tournament.teams.create!(name: "Argentina", code: "ARG", group: "A")
+    @bra = @tournament.teams.create!(name: "Brasil", code: "BRA", group: "A")
   end
 
   def future_match
-    @tournament.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.hour.from_now)
+    @tournament.matches.create!(home_team: @arg, away_team: @bra, kickoff_at: 1.hour.from_now)
   end
 
   def past_match
-    @tournament.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.hour.ago)
+    @tournament.matches.create!(home_team: @arg, away_team: @bra, kickoff_at: 1.hour.ago)
   end
 
   test "valid for a match before kickoff" do
