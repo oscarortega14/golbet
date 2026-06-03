@@ -3,11 +3,13 @@ require "test_helper"
 class ScoringServiceTest < ActiveSupport::TestCase
   setup do
     @tournament = Tournament.create!(name: "Mundial 2026")
+    @arg = @tournament.teams.create!(name: "Argentina", code: "ARG", group: "A")
+    @bra = @tournament.teams.create!(name: "Brasil", code: "BRA", group: "B")
     @player = Player.create!(name: "Oscar")
   end
 
   def finished_match(hs, as)
-    @tournament.matches.create!(home_team: "ARG", away_team: "BRA",
+    @tournament.matches.create!(home_team: @arg, away_team: @bra, stage: "group",
       kickoff_at: 2.hours.ago, status: "finished", home_score: hs, away_score: as)
   end
 
@@ -36,7 +38,7 @@ class ScoringServiceTest < ActiveSupport::TestCase
   end
 
   test "unfinished match gives 0 points" do
-    m = @tournament.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.hour.from_now)
+    m = @tournament.matches.create!(home_team: @arg, away_team: @bra, stage: "group", kickoff_at: 1.hour.from_now)
     assert_equal 0, ScoringService.points_for(predict(m, 2, 1), m)
   end
 

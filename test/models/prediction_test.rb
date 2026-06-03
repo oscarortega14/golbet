@@ -2,27 +2,34 @@ require "test_helper"
 
 class PredictionTest < ActiveSupport::TestCase
   setup do
-    @tournament = Tournament.create!(name: "Mundial 2026")
+    @t = Tournament.create!(name: "Mundial 2026")
+    @arg = @t.teams.create!(name: "Argentina", code: "ARG", group: "A")
+    @bra = @t.teams.create!(name: "Brasil", code: "BRA", group: "A")
     @player = Player.create!(name: "Oscar")
   end
 
   def future_match
-    @tournament.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.hour.from_now)
+    @t.matches.create!(home_team: @arg, away_team: @bra, kickoff_at: 1.hour.from_now)
   end
 
-  def past_match
-    @tournament.matches.create!(home_team: "ARG", away_team: "BRA", kickoff_at: 1.hour.ago)
-  end
-
-  test "valid for a match before kickoff" do
+  test "valid before kickoff with both teams" do
     p = Prediction.new(player: @player, match: future_match, home_pred: 2, away_pred: 1)
     assert p.valid?
   end
 
-  test "invalid when match already kicked off" do
-    p = Prediction.new(player: @player, match: past_match, home_pred: 2, away_pred: 1)
+  test "invalid after kickoff" do
+    m = @t.matches.create!(home_team: @arg, away_team: @bra, kickoff_at: 1.hour.ago)
+    p = Prediction.new(player: @player, match: m, home_pred: 2, away_pred: 1)
     assert_not p.valid?
     assert_includes p.errors[:base], "El partido ya comenzó, no se puede pronosticar"
+  end
+
+  test "invalid when match has no teams yet (TBD)" do
+    tbd = @t.matches.create!(stage: "round_of_32", kickoff_at: 1.day.from_now,
+                             home_label: "Cruce R32 #1", away_label: "Cruce R32 #2")
+    p = Prediction.new(player: @player, match: tbd, home_pred: 1, away_pred: 0)
+    assert_not p.valid?
+    assert_includes p.errors[:base], "Este partido aún no tiene equipos definidos"
   end
 
   test "requires non-negative scores" do
@@ -33,7 +40,6 @@ class PredictionTest < ActiveSupport::TestCase
   test "one prediction per player per match" do
     m = future_match
     Prediction.create!(player: @player, match: m, home_pred: 1, away_pred: 0)
-    dup = Prediction.new(player: @player, match: m, home_pred: 2, away_pred: 2)
-    assert_not dup.valid?
+    assert_not Prediction.new(player: @player, match: m, home_pred: 2, away_pred: 2).valid?
   end
 end

@@ -15,11 +15,12 @@ Rails.application.routes.draw do
   resources :predictions, only: [:index, :create]
   resources :results, only: [:index]
   resources :standings, only: [:index]
+  resources :groups, only: [:index]
 
   namespace :admin do
     get  "login", to: "sessions#new"
     post "login", to: "sessions#create"
-    resources :matches, only: [:index, :new, :create, :edit, :update]
+    resources :matches, only: [:index, :edit, :update]
     resources :results, only: [:index, :update]
   end
 end

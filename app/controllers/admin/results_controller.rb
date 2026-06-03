@@ -1,12 +1,19 @@
 module Admin
   class ResultsController < BaseController
     def index
-      tournament = Tournament.first_or_create!(name: "Torneo")
-      render Views::Admin::Results::Index.new(matches: tournament.matches.order(:kickoff_at))
+      tournament = Tournament.first || Tournament.create!(name: "Mundial 2026")
+      scope = tournament.matches.includes(:home_team, :away_team).order(:kickoff_at)
+      scope = scope.where(stage: params[:stage]) if params[:stage].present?
+      scope = scope.where(group: params[:group]) if params[:group].present?
+      render Views::Admin::Results::Index.new(matches: scope, filters: params.slice(:stage, :group).to_unsafe_h)
     end
 
     def update
       match = Match.find(params[:id])
+      if params[:home_score].blank? || params[:away_score].blank?
+        flash[:alert] = "Marcador inválido"
+        return redirect_to admin_results_path
+      end
       match.assign_attributes(home_score: params[:home_score], away_score: params[:away_score], status: "finished")
       if match.save
         redirect_to admin_results_path

@@ -3,7 +3,7 @@ class ResultsController < ApplicationController
 
   def index
     tournament = Tournament.first
-    matches = tournament ? tournament.matches.where(status: "finished").order(kickoff_at: :desc) : []
+    matches = tournament ? tournament.matches.where(status: "finished").includes(:home_team, :away_team).order(kickoff_at: :desc) : []
     my_preds = current_player.predictions.index_by(&:match_id)
     rows = matches.map do |m|
       pred = my_preds[m.id]

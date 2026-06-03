@@ -3,7 +3,9 @@ require "test_helper"
 class ResultsTest < ActionDispatch::IntegrationTest
   setup do
     @t = Tournament.create!(name: "Mundial 2026")
-    @m = @t.matches.create!(home_team: "ARG", away_team: "BRA",
+    @arg = @t.teams.create!(name: "Argentina", code: "ARG", flag: "🇦🇷", group: "A")
+    @bra = @t.teams.create!(name: "Brasil", code: "BRA", flag: "🇧🇷", group: "A")
+    @m = @t.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
       kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
   end
 
@@ -17,7 +19,9 @@ class ResultsTest < ActionDispatch::IntegrationTest
     Prediction.new(player: player, match: @m, home_pred: 2, away_pred: 1).save!(validate: false)
     get results_path
     assert_response :success
-    assert_match "ARG 2 - 1 BRA", response.body
+    assert_match "Argentina", response.body
+    assert_match "2 - 1", response.body
+    assert_match "Brasil", response.body
     assert_match "3 pts", response.body
   end
 

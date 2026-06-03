@@ -10,17 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_02_040055) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_140644) do
   create_table "matches", force: :cascade do |t|
+    t.string "away_label"
     t.integer "away_score"
-    t.string "away_team"
+    t.integer "away_team_id"
     t.datetime "created_at", null: false
+    t.string "group"
+    t.string "home_label"
     t.integer "home_score"
-    t.string "home_team"
+    t.integer "home_team_id"
     t.datetime "kickoff_at"
+    t.integer "slot"
+    t.string "stage", default: "group", null: false
     t.string "status"
     t.integer "tournament_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["away_team_id"], name: "index_matches_on_away_team_id"
+    t.index ["home_team_id"], name: "index_matches_on_home_team_id"
     t.index ["tournament_id"], name: "index_matches_on_tournament_id"
   end
 
@@ -44,13 +51,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_040055) do
     t.index ["player_id"], name: "index_predictions_on_player_id"
   end
 
+  create_table "teams", force: :cascade do |t|
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.string "flag"
+    t.string "group", null: false
+    t.string "name", null: false
+    t.integer "tournament_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournament_id", "code"], name: "index_teams_on_tournament_id_and_code", unique: true
+    t.index ["tournament_id"], name: "index_teams_on_tournament_id"
+  end
+
   create_table "tournaments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "matches", "teams", column: "away_team_id"
+  add_foreign_key "matches", "teams", column: "home_team_id"
   add_foreign_key "matches", "tournaments"
   add_foreign_key "predictions", "matches"
   add_foreign_key "predictions", "players"
+  add_foreign_key "teams", "tournaments"
 end

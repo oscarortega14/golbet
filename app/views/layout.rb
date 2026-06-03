@@ -32,6 +32,7 @@ class Views::Layout < Views::Base
 
   def render_nav
     nav(class: "flex items-center gap-1 rounded-full border border-border bg-muted/40 p-1") do
+      pill("Grupos", groups_path, :groups)
       pill("Pronósticos", predictions_path, :predictions)
       pill("Ranking", standings_path, :standings)
       pill("Resultados", results_path, :results)

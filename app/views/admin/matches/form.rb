@@ -1,25 +1,24 @@
 # frozen_string_literal: true
 
 class Views::Admin::Matches::Form < Views::Base
-  def initialize(match:)
+  def initialize(match:, teams:)
     @match = match
+    @teams = teams
   end
 
   def view_template
-    persisted = @match.persisted?
-    url = persisted ? admin_match_path(@match) : admin_matches_path
     render Views::Layout.new(active: nil) do
       render Components::UI::Card.new(class: "max-w-lg mx-auto") do
-        render Components::UI::CardContent.new(class: "py-6") do
-          form(action: url, method: "post", class: "space-y-4") do
+        render Components::UI::CardContent.new(padding: :standalone) do
+          form(action: admin_match_path(@match), method: "post", class: "space-y-4") do
             input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-            input(type: "hidden", name: "_method", value: "patch") if persisted
-            text_field(:home_team, "Equipo local")
-            text_field(:away_team, "Equipo visitante")
+            input(type: "hidden", name: "_method", value: "patch")
+            p(class: "text-sm text-muted-foreground") { "#{@match.stage} · #{@match.home_label} / #{@match.away_label}" }
+            team_select("home_team_id", "Equipo local", @match.home_team_id)
+            team_select("away_team_id", "Equipo visitante", @match.away_team_id)
             render Components::UI::Label.new(for_: "match_kickoff_at") { "Fecha y hora" }
-            kickoff = @match.kickoff_at&.strftime("%Y-%m-%dT%H:%M")
             render Components::UI::Input.new(type: "datetime-local", name: "match[kickoff_at]",
-              id: "match_kickoff_at", value: kickoff, required: true)
+              id: "match_kickoff_at", value: @match.kickoff_at&.strftime("%Y-%m-%dT%H:%M"))
             render Components::UI::Button.new(type: "submit", appearance: :primary) { "Guardar" }
           end
         end
@@ -29,9 +28,16 @@ class Views::Admin::Matches::Form < Views::Base
 
   private
 
-  def text_field(attr, label)
-    render Components::UI::Label.new(for_: "match_#{attr}") { label }
-    render Components::UI::Input.new(type: "text", name: "match[#{attr}]",
-      id: "match_#{attr}", value: @match.public_send(attr), required: true)
+  def team_select(field, label, selected)
+    render Components::UI::Label.new(for_: "match_#{field}") { label }
+    select(name: "match[#{field}]", id: "match_#{field}",
+           class: "block w-full rounded-md border border-border bg-card px-3 py-2") do
+      option(value: "") { "— TBD —" }
+      @teams.each do |team|
+        attrs = { value: team.id }
+        attrs[:selected] = true if team.id == selected
+        option(**attrs) { "#{team.flag} #{team.name} (#{team.group})" }
+      end
+    end
   end
 end
