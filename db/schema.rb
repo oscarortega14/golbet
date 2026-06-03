@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_140644) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_172154) do
   create_table "matches", force: :cascade do |t|
     t.string "away_label"
     t.integer "away_score"
@@ -33,9 +33,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_140644) do
 
   create_table "players", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "email"
+    t.datetime "email_verified_at"
     t.string "name"
     t.string "session_token"
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_players_on_email", unique: true
     t.index ["session_token"], name: "index_players_on_session_token", unique: true
   end
 
