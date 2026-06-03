@@ -37,9 +37,9 @@ body {
   position: relative;
   isolation: isolate;
   background:
-    radial-gradient(120% 80% at 50% -20%, hsl(var(--gb-green) / 0.18), transparent 55%),
-    radial-gradient(90% 60% at 90% 10%, hsl(var(--gb-green) / 0.09), transparent 60%),
-    radial-gradient(80% 70% at 5% 90%, hsl(160 80% 40% / 0.07), transparent 60%),
+    radial-gradient(150% 110% at 50% -25%, hsl(var(--gb-green) / 0.28), transparent 72%),
+    radial-gradient(120% 90% at 90% 5%, hsl(var(--gb-green) / 0.18), transparent 72%),
+    radial-gradient(110% 95% at 5% 95%, hsl(160 80% 40% / 0.14), transparent 72%),
     hsl(var(--background));
 }
 
