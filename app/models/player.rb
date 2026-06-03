@@ -1,5 +1,6 @@
 class Player < ApplicationRecord
   has_many :predictions, dependent: :destroy
+  has_many :special_predictions, dependent: :destroy
 
   generates_token_for :magic_link, expires_in: 20.minutes do
     email
