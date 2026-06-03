@@ -66,4 +66,19 @@ class MagicLinkTest < ActionDispatch::IntegrationTest
     assert_redirected_to account_path
     assert_equal 1, Player.where(email: "taken@example.com").count
   end
+
+  test "a verified account cannot change its email via the endpoint (no stale verification)" do
+    login_guest
+    post account_email_path, params: { email: "oscar@example.com" }
+    player = Player.find_by(email: "oscar@example.com")
+    get magic_path(player.generate_token_for(:magic_link)) # now verified
+    assert player.reload.registered?
+
+    assert_emails 0 do
+      post account_email_path, params: { email: "otro@example.com" }
+    end
+    assert_redirected_to account_path
+    assert_equal "oscar@example.com", player.reload.email   # unchanged
+    assert player.registered?                                # still verified
+  end
 end
