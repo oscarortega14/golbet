@@ -112,9 +112,9 @@ class Views::Predictions::Index < Views::Base
     form(action: predictions_path, method: "post", class: "flex items-center gap-2") do
       input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
       input(type: "hidden", name: "match_id", value: match.id)
-      render Components::UI::Input.new(type: "number", name: "home_pred", min: 0, value: pred&.home_pred, class: "w-14", required: true)
+      render Components::UI::NumberInput.new(name: "home_pred", value: pred&.home_pred, min: 0, max: 30, step: 1, size: :sm)
       span { "-" }
-      render Components::UI::Input.new(type: "number", name: "away_pred", min: 0, value: pred&.away_pred, class: "w-14", required: true)
+      render Components::UI::NumberInput.new(name: "away_pred", value: pred&.away_pred, min: 0, max: 30, step: 1, size: :sm)
       render Components::UI::Button.new(type: "submit", appearance: :primary) { "Guardar" }
     end
   end
