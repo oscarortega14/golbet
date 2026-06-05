@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_05_191851) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_193525) do
   create_table "matches", force: :cascade do |t|
     t.string "away_label"
     t.integer "away_score"
@@ -83,13 +83,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_191851) do
     t.integer "champion_team_id"
     t.datetime "created_at", null: false
     t.integer "player_id", null: false
+    t.integer "pool_id", null: false
     t.string "top_scorer"
-    t.integer "tournament_id", null: false
     t.datetime "updated_at", null: false
     t.index ["champion_team_id"], name: "index_special_predictions_on_champion_team_id"
-    t.index ["player_id", "tournament_id"], name: "index_special_predictions_on_player_id_and_tournament_id", unique: true
+    t.index ["player_id", "pool_id"], name: "index_special_predictions_on_player_id_and_pool_id", unique: true
     t.index ["player_id"], name: "index_special_predictions_on_player_id"
-    t.index ["tournament_id"], name: "index_special_predictions_on_tournament_id"
+    t.index ["pool_id"], name: "index_special_predictions_on_pool_id"
   end
 
   create_table "teams", force: :cascade do |t|
@@ -124,8 +124,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_191851) do
   add_foreign_key "predictions", "players"
   add_foreign_key "predictions", "pools"
   add_foreign_key "special_predictions", "players"
+  add_foreign_key "special_predictions", "pools"
   add_foreign_key "special_predictions", "teams", column: "champion_team_id"
-  add_foreign_key "special_predictions", "tournaments"
   add_foreign_key "teams", "tournaments"
   add_foreign_key "tournaments", "teams", column: "champion_team_id"
 end
