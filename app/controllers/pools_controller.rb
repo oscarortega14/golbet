@@ -15,7 +15,7 @@ class PoolsController < ApplicationController
 
   def show
     pool = current_player.pools.find(params[:id])
-    render Views::Pools::Show.new(pool: pool, owner: pool.owner_id == current_player.id)
+    render Views::Pools::Show.new(pool: pool, owner: pool.owner_id == current_player.id, rules_locked: pool.rules_locked?)
   end
 
   def create

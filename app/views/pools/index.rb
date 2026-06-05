@@ -64,11 +64,15 @@ class Views::Pools::Index < Views::Base
   end
 
   def create_form
-    form(action: pools_path, method: "post", class: "flex items-end gap-2") do
+    form(action: pools_path, method: "post", class: "space-y-3") do
       input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
       div(class: "flex-1 space-y-1.5") do
         render(Components::UI::Label.new(for_: "name")) { "Nombre de la polla" }
         render Components::UI::Input.new(id: "name", name: "name", placeholder: "Los Cracks", required: true)
+      end
+      div(class: "mt-3 space-y-2 rounded-md border border-border p-3") do
+        p(class: "text-sm font-medium") { "Reglas" }
+        rules_fields(Pool.new)
       end
       render Components::UI::Button.new(type: "submit", appearance: :primary) { "Crear" }
     end
