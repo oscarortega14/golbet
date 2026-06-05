@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Views::Pools::Index < Views::Base
-  def initialize(rows:, can_create:)
+  def initialize(rows:, can_create:, tournaments: [])
     @rows = rows
     @can_create = can_create
+    @tournaments = tournaments
   end
 
   def view_template
@@ -69,6 +70,23 @@ class Views::Pools::Index < Views::Base
       div(class: "flex-1 space-y-1.5") do
         render(Components::UI::Label.new(for_: "name")) { "Nombre de la polla" }
         render Components::UI::Input.new(id: "name", name: "name", placeholder: "Los Cracks", required: true)
+      end
+      if @tournaments.size > 1
+        div(class: "flex-1 space-y-1.5") do
+          render(Components::UI::Label.new(for_: "tournament_id")) { "Torneo" }
+          select(id: "tournament_id", name: "tournament_id",
+                 class: "w-full rounded-md border border-border bg-background px-3 py-2 text-sm") do
+            @tournaments.each do |t|
+              if t.active?
+                option(value: t.id, selected: true) { t.name }
+              else
+                option(value: t.id) { t.name }
+              end
+            end
+          end
+        end
+      elsif @tournaments.size == 1
+        input(type: "hidden", name: "tournament_id", value: @tournaments.first.id)
       end
       div(class: "mt-3 space-y-2 rounded-md border border-border p-3") do
         p(class: "text-sm font-medium") { "Reglas" }
