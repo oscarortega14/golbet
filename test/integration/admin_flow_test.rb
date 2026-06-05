@@ -35,8 +35,9 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
 
   test "admin enters a result, match becomes finished and scoring reflects it" do
     m = @tournament.matches.create!(home_team: @arg, away_team: @bra, stage: "group", group: "A", kickoff_at: 1.hour.ago)
+    pool = Pool.create!(tournament: @tournament, name: "General", public: true)
     ana = Player.create!(name: "Ana")
-    Prediction.new(player: ana, match: m, home_pred: 2, away_pred: 1).save!(validate: false)
+    Prediction.new(player: ana, match: m, pool: pool, home_pred: 2, away_pred: 1).save!(validate: false)
 
     post admin_login_path, params: { password: "test-admin-pw" }
     patch admin_result_path(m), params: { home_score: 2, away_score: 1 }

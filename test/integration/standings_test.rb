@@ -7,11 +7,12 @@ class StandingsTest < ActionDispatch::IntegrationTest
     @bra = @t.teams.create!(name: "Brasil", code: "BRA", flag: "🇧🇷", group: "A")
     @m = @t.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
       kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
+    @general = Pool.create!(tournament: @t, name: "General", public: true)
     @ana = Player.create!(name: "Ana")
     @beto = Player.create!(name: "Beto")
     # predictions on a finished (locked) match: bypass the kickoff-lock validation for setup
-    Prediction.new(player: @ana, match: @m, home_pred: 2, away_pred: 1).save!(validate: false)  # exact = 3
-    Prediction.new(player: @beto, match: @m, home_pred: 1, away_pred: 0).save!(validate: false) # outcome = 1
+    Prediction.new(player: @ana, match: @m, pool: @general, home_pred: 2, away_pred: 1).save!(validate: false)  # exact = 3
+    Prediction.new(player: @beto, match: @m, pool: @general, home_pred: 1, away_pred: 0).save!(validate: false) # outcome = 1
   end
 
   def login(name = "Viewer")

@@ -6,6 +6,7 @@ class ScoringServiceTest < ActiveSupport::TestCase
     @arg = @tournament.teams.create!(name: "Argentina", code: "ARG", group: "A")
     @bra = @tournament.teams.create!(name: "Brasil", code: "BRA", group: "B")
     @player = Player.create!(name: "Oscar")
+    @pool = Pool.create!(tournament: @tournament, name: "General", public: true)
   end
 
   def finished_match(hs, as)
@@ -48,13 +49,13 @@ class ScoringServiceTest < ActiveSupport::TestCase
     ana = Player.create!(name: "Ana")
     beto = Player.create!(name: "Beto")
     # Ana: exact on m1 (3) + exact draw on m2 (3) = 6
-    Prediction.new(player: ana, match: m1, home_pred: 2, away_pred: 1).save!(validate: false)
-    Prediction.new(player: ana, match: m2, home_pred: 0, away_pred: 0).save!(validate: false)
+    Prediction.new(player: ana, match: m1, pool: @pool, home_pred: 2, away_pred: 1).save!(validate: false)
+    Prediction.new(player: ana, match: m2, pool: @pool, home_pred: 0, away_pred: 0).save!(validate: false)
     # Beto: outcome on m1 (1) + miss on m2 (0) = 1
-    Prediction.new(player: beto, match: m1, home_pred: 1, away_pred: 0).save!(validate: false)
-    Prediction.new(player: beto, match: m2, home_pred: 1, away_pred: 0).save!(validate: false)
+    Prediction.new(player: beto, match: m1, pool: @pool, home_pred: 1, away_pred: 0).save!(validate: false)
+    Prediction.new(player: beto, match: m2, pool: @pool, home_pred: 1, away_pred: 0).save!(validate: false)
 
-    rows = ScoringService.standings(@tournament)
+    rows = ScoringService.standings(@pool)
     assert_equal ["Ana", "Beto"], rows.map { |r| r[:player].name }
     assert_equal [6, 1], rows.map { |r| r[:points] }
   end
@@ -63,8 +64,8 @@ class ScoringServiceTest < ActiveSupport::TestCase
     m = finished_match(1, 0)
     Player.create!(name: "NoPreds")
     scorer = Player.create!(name: "Scorer")
-    Prediction.new(player: scorer, match: m, home_pred: 1, away_pred: 0).save!(validate: false)
-    names = ScoringService.standings(@tournament).map { |r| r[:player].name }
+    Prediction.new(player: scorer, match: m, pool: @pool, home_pred: 1, away_pred: 0).save!(validate: false)
+    names = ScoringService.standings(@pool).map { |r| r[:player].name }
     assert_includes names, "Scorer"
     assert_not_includes names, "NoPreds"
   end
@@ -104,11 +105,11 @@ class ScoringServiceTest < ActiveSupport::TestCase
   test "standings adds the special bonus to a player's match points" do
     g = @tournament.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
       kickoff_at: 2.hours.ago, status: "finished", home_score: 1, away_score: 0)
-    Prediction.new(player: @player, match: g, home_pred: 1, away_pred: 0).save!(validate: false) # 3
+    Prediction.new(player: @player, match: g, pool: @pool, home_pred: 1, away_pred: 0).save!(validate: false) # 3
     # seed a special prediction past the start-lock (lock is a user-flow guard, not scoring):
-    SpecialPrediction.new(player: @player, tournament: @tournament, champion_team: @arg).save!(validate: false)
+    SpecialPrediction.new(player: @player, pool: @pool, champion_team: @arg).save!(validate: false)
     @tournament.update!(champion_team: @arg) # +15
-    row = ScoringService.standings(@tournament).find { |r| r[:player] == @player }
+    row = ScoringService.standings(@pool).find { |r| r[:player] == @player }
     assert_equal 18, row[:points]   # 3 + 15
   end
 end
