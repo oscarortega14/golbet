@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :results, only: [:index]
   resources :standings, only: [:index]
   resources :groups, only: [:index]
+  resources :pools, only: [:index, :create, :show], path: "pollas"
   post "pollas/:id/select", to: "pools#select", as: :select_pool
 
   namespace :admin do
