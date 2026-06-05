@@ -32,8 +32,9 @@ class MagicLinkTest < ActionDispatch::IntegrationTest
     arg = t.teams.create!(name: "Argentina", code: "ARG", group: "A")
     bra = t.teams.create!(name: "Brasil", code: "BRA", group: "A")
     m = t.matches.create!(stage: "group", group: "A", home_team: arg, away_team: bra, kickoff_at: 1.hour.from_now)
+    pool = Pool.create!(tournament: t, name: "General", public: true)
     account = Player.create!(name: "Ana", email: "ana@example.com", email_verified_at: Time.current)
-    Prediction.create!(player: account, match: m, home_pred: 2, away_pred: 1)
+    Prediction.create!(player: account, match: m, pool: pool, home_pred: 2, away_pred: 1)
 
     assert_emails 1 do
       post login_path, params: { email: "ana@example.com" }

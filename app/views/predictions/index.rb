@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
 class Views::Predictions::Index < Views::Base
-  def initialize(grouped:, predictions:, special: nil, teams: [], tournament: nil, flash: {})
+  def initialize(grouped:, predictions:, special: nil, teams: [], tournament: nil, pool_name: nil, flash: {})
     @grouped = grouped
     @predictions = predictions
     @special = special
     @teams = teams
     @tournament = tournament
+    @pool_name = pool_name
     @flash = flash
   end
 
   def view_template
     render Views::Layout.new(active: :predictions) do
       page_header("Tus pronósticos", "Clava los marcadores antes del pitazo inicial.")
+      p(class: "mb-4 text-sm text-muted-foreground") { "Polla: #{@pool_name}" } if @pool_name
       render_flash
       special_card if @special
       if @grouped.empty?

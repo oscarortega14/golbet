@@ -5,6 +5,7 @@ class SpecialPredictionTest < ActiveSupport::TestCase
     @t = Tournament.create!(name: "Mundial 2026")
     @arg = @t.teams.create!(name: "Argentina", code: "ARG", group: "A")
     @player = Player.create!(name: "Ana")
+    @pool = Pool.create!(tournament: @t, name: "General", public: true)
   end
 
   def future_start!
@@ -13,27 +14,27 @@ class SpecialPredictionTest < ActiveSupport::TestCase
 
   test "valid pick before the tournament starts" do
     future_start!
-    sp = SpecialPrediction.new(player: @player, tournament: @t, champion_team: @arg, top_scorer: "Messi")
+    sp = SpecialPrediction.new(player: @player, pool: @pool, champion_team: @arg, top_scorer: "Messi")
     assert sp.valid?
   end
 
-  test "one special prediction per (player, tournament)" do
+  test "one special prediction per (player, pool)" do
     future_start!
-    SpecialPrediction.create!(player: @player, tournament: @t, champion_team: @arg)
-    dup = SpecialPrediction.new(player: @player, tournament: @t, champion_team: @arg)
+    SpecialPrediction.create!(player: @player, pool: @pool, champion_team: @arg)
+    dup = SpecialPrediction.new(player: @player, pool: @pool, champion_team: @arg)
     assert_not dup.valid?
   end
 
   test "champion must belong to the same tournament" do
     future_start!
     other = Tournament.create!(name: "Otro").teams.create!(name: "X", code: "XXX", group: "A")
-    sp = SpecialPrediction.new(player: @player, tournament: @t, champion_team: other)
+    sp = SpecialPrediction.new(player: @player, pool: @pool, champion_team: other)
     assert_not sp.valid?
   end
 
   test "blocked once the tournament has started" do
     @t.matches.create!(stage: "group", kickoff_at: 1.hour.ago, home_label: "A", away_label: "B")
-    sp = SpecialPrediction.new(player: @player, tournament: @t, champion_team: @arg)
+    sp = SpecialPrediction.new(player: @player, pool: @pool, champion_team: @arg)
     assert_not sp.valid?
     assert_includes sp.errors[:base], "El torneo ya comenzó, no se puede cambiar tu predicción especial"
   end

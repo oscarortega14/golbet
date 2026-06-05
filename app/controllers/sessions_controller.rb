@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     player = Player.new(name: params[:name])
     if player.save
       cookies.signed.permanent[:player_token] = player.session_token
-      redirect_to predictions_path
+      redirect_to(pending_join_path || predictions_path)
     else
       render Views::Sessions::New.new, status: :unprocessable_entity
     end

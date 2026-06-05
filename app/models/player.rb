@@ -1,6 +1,9 @@
 class Player < ApplicationRecord
   has_many :predictions, dependent: :destroy
   has_many :special_predictions, dependent: :destroy
+  has_many :memberships, dependent: :destroy
+  has_many :pools, through: :memberships
+  has_many :owned_pools, class_name: "Pool", foreign_key: :owner_id, dependent: :nullify
 
   generates_token_for :magic_link, expires_in: 20.minutes do
     email

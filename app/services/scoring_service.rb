@@ -45,19 +45,20 @@ class ScoringService
     pts
   end
 
-  def self.standings(tournament)
+  def self.standings(pool)
+    tournament = pool.tournament
     finished = tournament.matches.where(status: "finished").to_a
     by_match = finished.index_by(&:id)
 
-    totals = Hash.new(0)   # player_id => points
-    players = {}           # player_id => Player
+    totals = Hash.new(0)
+    players = {}
 
-    Prediction.where(match_id: by_match.keys).includes(:player).each do |pred|
+    pool.predictions.where(match_id: by_match.keys).includes(:player).each do |pred|
       players[pred.player_id] ||= pred.player
       totals[pred.player_id] += match_points(pred, by_match[pred.match_id])
     end
 
-    tournament.special_predictions.includes(:player).each do |sp|
+    pool.special_predictions.includes(:player).each do |sp|
       bonus = special_points(sp, tournament)
       next unless bonus.positive?
       players[sp.player_id] ||= sp.player

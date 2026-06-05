@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_224833) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_202957) do
   create_table "matches", force: :cascade do |t|
     t.string "away_label"
     t.integer "away_score"
@@ -31,6 +31,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_224833) do
     t.index ["tournament_id"], name: "index_matches_on_tournament_id"
   end
 
+  create_table "memberships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "player_id", null: false
+    t.integer "pool_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_id", "pool_id"], name: "index_memberships_on_player_id_and_pool_id", unique: true
+    t.index ["player_id"], name: "index_memberships_on_player_id"
+    t.index ["pool_id"], name: "index_memberships_on_pool_id"
+  end
+
   create_table "players", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email"
@@ -42,29 +52,45 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_224833) do
     t.index ["session_token"], name: "index_players_on_session_token", unique: true
   end
 
+  create_table "pools", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "invite_token", null: false
+    t.string "name", null: false
+    t.integer "owner_id"
+    t.boolean "public", default: false, null: false
+    t.integer "tournament_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invite_token"], name: "index_pools_on_invite_token", unique: true
+    t.index ["owner_id"], name: "index_pools_on_owner_id"
+    t.index ["public"], name: "index_pools_on_single_public", unique: true, where: "public = 1"
+    t.index ["tournament_id"], name: "index_pools_on_tournament_id"
+  end
+
   create_table "predictions", force: :cascade do |t|
     t.integer "away_pred"
     t.datetime "created_at", null: false
     t.integer "home_pred"
     t.integer "match_id", null: false
     t.integer "player_id", null: false
+    t.integer "pool_id", null: false
     t.datetime "updated_at", null: false
     t.index ["match_id"], name: "index_predictions_on_match_id"
-    t.index ["player_id", "match_id"], name: "index_predictions_on_player_id_and_match_id", unique: true
+    t.index ["player_id", "pool_id", "match_id"], name: "index_predictions_on_player_id_and_pool_id_and_match_id", unique: true
     t.index ["player_id"], name: "index_predictions_on_player_id"
+    t.index ["pool_id"], name: "index_predictions_on_pool_id"
   end
 
   create_table "special_predictions", force: :cascade do |t|
     t.integer "champion_team_id"
     t.datetime "created_at", null: false
     t.integer "player_id", null: false
+    t.integer "pool_id", null: false
     t.string "top_scorer"
-    t.integer "tournament_id", null: false
     t.datetime "updated_at", null: false
     t.index ["champion_team_id"], name: "index_special_predictions_on_champion_team_id"
-    t.index ["player_id", "tournament_id"], name: "index_special_predictions_on_player_id_and_tournament_id", unique: true
+    t.index ["player_id", "pool_id"], name: "index_special_predictions_on_player_id_and_pool_id", unique: true
     t.index ["player_id"], name: "index_special_predictions_on_player_id"
-    t.index ["tournament_id"], name: "index_special_predictions_on_tournament_id"
+    t.index ["pool_id"], name: "index_special_predictions_on_pool_id"
   end
 
   create_table "teams", force: :cascade do |t|
@@ -91,11 +117,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_224833) do
   add_foreign_key "matches", "teams", column: "away_team_id"
   add_foreign_key "matches", "teams", column: "home_team_id"
   add_foreign_key "matches", "tournaments"
+  add_foreign_key "memberships", "players"
+  add_foreign_key "memberships", "pools"
+  add_foreign_key "pools", "players", column: "owner_id"
+  add_foreign_key "pools", "tournaments"
   add_foreign_key "predictions", "matches"
   add_foreign_key "predictions", "players"
+  add_foreign_key "predictions", "pools"
   add_foreign_key "special_predictions", "players"
+  add_foreign_key "special_predictions", "pools"
   add_foreign_key "special_predictions", "teams", column: "champion_team_id"
-  add_foreign_key "special_predictions", "tournaments"
   add_foreign_key "teams", "tournaments"
   add_foreign_key "tournaments", "teams", column: "champion_team_id"
 end

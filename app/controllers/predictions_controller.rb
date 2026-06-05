@@ -14,20 +14,21 @@ class PredictionsController < ApplicationController
                      .sort_by { |stage, _| Match::STAGES.index(stage) }
                      .to_h
                      .transform_keys { |s| STAGE_LABELS[s] || s }
-    special = @tournament && current_player.special_predictions.find_or_initialize_by(tournament: @tournament)
+    special = current_player.special_predictions.find_or_initialize_by(pool: current_pool)
     render Views::Predictions::Index.new(
       grouped: grouped,
-      predictions: current_player.predictions.index_by(&:match_id),
+      predictions: current_player.predictions.where(pool: current_pool).index_by(&:match_id),
       special: special,
       teams: @tournament ? @tournament.teams.order(:group, :name) : [],
-      tournament: @tournament,
+      tournament: current_pool&.tournament,
+      pool_name: current_pool&.name,
       flash: { notice: flash[:notice], alert: flash[:alert] }
     )
   end
 
   def create
     match = Match.find(params[:match_id])
-    prediction = current_player.predictions.find_or_initialize_by(match: match)
+    prediction = current_player.predictions.find_or_initialize_by(match: match, pool: current_pool)
     prediction.assign_attributes(home_pred: params[:home_pred], away_pred: params[:away_pred])
 
     if prediction.save
