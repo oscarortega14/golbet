@@ -15,7 +15,7 @@ class ScoringServiceTest < ActiveSupport::TestCase
   end
 
   def predict(match, hp, ap)
-    Prediction.new(player: @player, match: match, home_pred: hp, away_pred: ap)
+    Prediction.new(player: @player, pool: @pool, match: match, home_pred: hp, away_pred: ap)
   end
 
   test "exact score gives 3 points" do
@@ -73,33 +73,33 @@ class ScoringServiceTest < ActiveSupport::TestCase
   test "match_points multiplies the base by the stage factor" do
     final = @tournament.matches.create!(stage: "final", home_team: @arg, away_team: @bra,
       kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
-    exact = Prediction.new(player: @player, match: final, home_pred: 2, away_pred: 1)
+    exact = Prediction.new(player: @player, pool: @pool, match: final, home_pred: 2, away_pred: 1)
     assert_equal 15, ScoringService.match_points(exact, final)   # 3 (exact) * 5 (final)
 
     qf = @tournament.matches.create!(stage: "quarter_final", home_team: @arg, away_team: @bra,
       kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
-    outcome = Prediction.new(player: @player, match: qf, home_pred: 3, away_pred: 0)
+    outcome = Prediction.new(player: @player, pool: @pool, match: qf, home_pred: 3, away_pred: 0)
     assert_equal 3, ScoringService.match_points(outcome, qf)     # 1 (outcome) * 3 (QF)
   end
 
   test "group stage keeps the base (x1)" do
     g = @tournament.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
       kickoff_at: 2.hours.ago, status: "finished", home_score: 1, away_score: 0)
-    exact = Prediction.new(player: @player, match: g, home_pred: 1, away_pred: 0)
+    exact = Prediction.new(player: @player, pool: @pool, match: g, home_pred: 1, away_pred: 0)
     assert_equal 3, ScoringService.match_points(exact, g)
   end
 
   test "special_points awards champion and top-scorer bonuses when resolved" do
-    sp = SpecialPrediction.new(champion_team: @arg, top_scorer: "Messi")
+    sp = SpecialPrediction.new(pool: @pool, champion_team: @arg, top_scorer: "Messi")
     @tournament.update!(champion_team: @arg, top_scorer: "MÉSSI") # normalized match
-    assert_equal 25, ScoringService.special_points(sp, @tournament) # 15 + 10
+    assert_equal 25, ScoringService.special_points(sp) # 15 + 10
   end
 
   test "special_points gives nothing before resolution or on a miss" do
-    sp = SpecialPrediction.new(champion_team: @bra, top_scorer: "Otro")
-    assert_equal 0, ScoringService.special_points(sp, @tournament)         # unresolved
+    sp = SpecialPrediction.new(pool: @pool, champion_team: @bra, top_scorer: "Otro")
+    assert_equal 0, ScoringService.special_points(sp)         # unresolved
     @tournament.update!(champion_team: @arg, top_scorer: "Messi")
-    assert_equal 0, ScoringService.special_points(sp, @tournament)         # both wrong
+    assert_equal 0, ScoringService.special_points(sp)         # both wrong
   end
 
   test "standings adds the special bonus to a player's match points" do
@@ -111,5 +111,43 @@ class ScoringServiceTest < ActiveSupport::TestCase
     @tournament.update!(champion_team: @arg) # +15
     row = ScoringService.standings(@pool).find { |r| r[:player] == @player }
     assert_equal 18, row[:points]   # 3 + 15
+  end
+
+  test "points_for honors the pool's exact/outcome points" do
+    custom = Pool.create!(tournament: @tournament, name: "Custom", exact_points: 5, outcome_points: 2)
+    g = @tournament.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
+      kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
+    exact = Prediction.new(player: @player, pool: custom, match: g, home_pred: 2, away_pred: 1)
+    outcome = Prediction.new(player: @player, pool: custom, match: g, home_pred: 3, away_pred: 0)
+    assert_equal 5, ScoringService.points_for(exact, g)
+    assert_equal 2, ScoringService.points_for(outcome, g)
+  end
+
+  test "knockout multiplier toggle off keeps the base" do
+    nomult = Pool.create!(tournament: @tournament, name: "NoMult", knockout_multipliers: false)
+    final = @tournament.matches.create!(stage: "final", home_team: @arg, away_team: @bra,
+      kickoff_at: 2.hours.ago, status: "finished", home_score: 1, away_score: 0)
+    exact = Prediction.new(player: @player, pool: nomult, match: final, home_pred: 1, away_pred: 0)
+    assert_equal 3, ScoringService.match_points(exact, final)
+  end
+
+  test "special_points respects the pool toggle and bonus values" do
+    @tournament.update!(champion_team: @arg, top_scorer: "Messi")
+    on = Pool.create!(tournament: @tournament, name: "On", champion_bonus: 20, top_scorer_bonus: 8)
+    off = Pool.create!(tournament: @tournament, name: "Off", special_enabled: false)
+    sp_on = SpecialPrediction.new(pool: on, champion_team: @arg, top_scorer: "messi")
+    sp_off = SpecialPrediction.new(pool: off, champion_team: @arg, top_scorer: "messi")
+    assert_equal 28, ScoringService.special_points(sp_on)
+    assert_equal 0, ScoringService.special_points(sp_off)
+  end
+
+  test "standings differ by pool rules for the same picks" do
+    g = @tournament.matches.create!(stage: "group", group: "A", home_team: @arg, away_team: @bra,
+      kickoff_at: 2.hours.ago, status: "finished", home_score: 2, away_score: 1)
+    rich = Pool.create!(tournament: @tournament, name: "Rich", exact_points: 10)
+    Prediction.new(player: @player, pool: @pool, match: g, home_pred: 2, away_pred: 1).save!(validate: false)
+    Prediction.new(player: @player, pool: rich, match: g, home_pred: 2, away_pred: 1).save!(validate: false)
+    assert_equal 3, ScoringService.standings(@pool).first[:points]
+    assert_equal 10, ScoringService.standings(rich).first[:points]
   end
 end
