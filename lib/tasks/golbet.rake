@@ -2,6 +2,7 @@ namespace :golbet do
   desc "Load World Cup teams + group fixtures (CSV) and build the knockout skeleton"
   task load_fixtures: :environment do
     tournament = Tournament.first_or_create!(name: "Mundial 2026")
+    Pool.find_or_create_by!(public: true) { |p| p.tournament = tournament; p.name = "Mundial — General" }
     teams_csv = File.read(Rails.root.join("db/fixtures/teams.csv"))
     matches_csv = File.read(Rails.root.join("db/fixtures/group_matches.csv"))
 

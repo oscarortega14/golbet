@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :results, only: [:index]
   resources :standings, only: [:index]
   resources :groups, only: [:index]
+  post "pollas/:id/select", to: "pools#select", as: :select_pool
 
   namespace :admin do
     get  "login", to: "sessions#new"
