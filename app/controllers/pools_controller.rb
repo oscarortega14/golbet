@@ -22,7 +22,7 @@ class PoolsController < ApplicationController
     unless current_player.registered?
       redirect_to account_path, alert: "Verifica tu email para crear una polla." and return
     end
-    pool = Pool.new(name: params[:name], tournament: Tournament.first, owner: current_player)
+    pool = Pool.new(pool_rule_params.merge(name: params[:name], tournament: Tournament.first, owner: current_player))
     if pool.save
       Membership.find_or_create_by!(player: current_player, pool: pool)
       session[:pool_id] = pool.id
@@ -32,9 +32,29 @@ class PoolsController < ApplicationController
     end
   end
 
+  def update
+    pool = current_player.owned_pools.find(params[:id])
+    if pool.rules_locked?
+      redirect_to pool_path(pool), alert: "El torneo ya empezó; las reglas están bloqueadas." and return
+    end
+    if pool.update(pool_rule_params)
+      redirect_to pool_path(pool), notice: "Reglas actualizadas."
+    else
+      redirect_to pool_path(pool), alert: pool.errors.full_messages.first
+    end
+  end
+
   def select
     pool = current_player.pools.find_by(id: params[:id])
     session[:pool_id] = pool.id if pool
     redirect_back fallback_location: predictions_path
+  end
+
+  private
+
+  def pool_rule_params
+    params.permit(:exact_points, :outcome_points, :knockout_multipliers, :special_enabled,
+                  :champion_bonus, :top_scorer_bonus)
+          .to_h.reject { |_, v| v.blank? }
   end
 end
