@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   resources :groups, only: [:index]
   resources :pools, only: [:index, :create, :show], path: "pollas"
   post "pollas/:id/select", to: "pools#select", as: :select_pool
+  get  "unirse/:token", to: "memberships#new", as: :join
+  post "unirse/:token", to: "memberships#create"
 
   namespace :admin do
     get  "login", to: "sessions#new"

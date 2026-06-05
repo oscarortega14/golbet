@@ -9,6 +9,6 @@ class StandingsController < ApplicationController
     @sort_dir = params[:sort] == "asc" ? :asc : :desc
     rows = @sort_dir == :asc ? ranking.sort_by { |r| [r[:points], r[:player].name] } : ranking
 
-    render Views::Standings::Index.new(rows: rows, sort_dir: @sort_dir, podium: podium)
+    render Views::Standings::Index.new(rows: rows, sort_dir: @sort_dir, podium: podium, pool_name: current_pool&.name)
   end
 end

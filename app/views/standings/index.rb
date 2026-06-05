@@ -3,15 +3,17 @@
 class Views::Standings::Index < Views::Base
   PODIUM_HEIGHTS = { 1 => "h-28", 2 => "h-20", 3 => "h-16" }.freeze
 
-  def initialize(rows:, sort_dir:, podium: [])
+  def initialize(rows:, sort_dir:, podium: [], pool_name: nil)
     @rows = rows
     @sort_dir = sort_dir
     @podium = podium
+    @pool_name = pool_name
   end
 
   def view_template
     render Views::Layout.new(active: :standings) do
       page_header("Ranking", "Los que más saben de fútbol, hasta arriba.")
+      p(class: "mb-4 text-sm text-muted-foreground") { "Polla: #{@pool_name}" } if @pool_name
       if @rows.empty?
         render Components::UI::Alert.new { "Aún no hay puntos en el ranking. ¡Que empiece el torneo!" }
       else

@@ -21,6 +21,7 @@ class PredictionsController < ApplicationController
       special: special,
       teams: @tournament ? @tournament.teams.order(:group, :name) : [],
       tournament: current_pool&.tournament,
+      pool_name: current_pool&.name,
       flash: { notice: flash[:notice], alert: flash[:alert] }
     )
   end

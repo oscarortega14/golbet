@@ -40,8 +40,9 @@ namespace :golbet do
     }.freeze
 
     ActiveRecord::Base.transaction do
-      [Prediction, SpecialPrediction, Match, Team, Player, Tournament].each(&:delete_all)
+      [Membership, Pool, Prediction, SpecialPrediction, Match, Team, Player, Tournament].each(&:delete_all)
       t = Tournament.create!(name: "Mundial 2026")
+      general = Pool.create!(name: "Mundial — General", tournament: t, public: true)
 
       # Teams
       teams = {}
@@ -99,22 +100,30 @@ namespace :golbet do
       scorers = ["Mbappé", "Messi", "Haaland", "Kane", "Vinícius", "Lautaro"]
       %w[Ana Beto Caro Diego Eva Oscar].each_with_index do |name, i|
         player = Player.create!(name:)
+        Membership.create!(player:, pool: general)
         played.each_with_index do |m, mi|
           exact = i.zero? || ((mi + i) % 3).zero?
           hp = exact ? m.home_score : m.home_score + 1
           ap = exact ? m.away_score : m.away_score
-          Prediction.new(player:, match: m, home_pred: hp, away_pred: ap).save!(validate: false)
+          Prediction.new(player:, pool: general, match: m, home_pred: hp, away_pred: ap).save!(validate: false)
         end
         # special prediction (locked: tournament already started) — seed past the guard
-        SpecialPrediction.new(player:, tournament: t, champion_team: qualifiers[i], top_scorer: scorers[i]).save!(validate: false)
+        SpecialPrediction.new(player:, pool: general, champion_team: qualifiers[i], top_scorer: scorers[i]).save!(validate: false)
       end
+
+      # Example PRIVATE pool to showcase the pools UI (registered owner + a couple members)
+      owner = Player.create!(name: "Capitán", email: "capi@example.com", email_verified_at: Time.current)
+      privada = Pool.create!(name: "Los Cracks", tournament: t, owner: owner)
+      [owner, Player.find_by(name: "Ana"), Player.find_by(name: "Beto")].each { |pl| Membership.create!(player: pl, pool: privada) }
       # Tournament left UNRESOLVED (final not played) — resolve it from /admin to award bonuses.
     end
 
     t = Tournament.first
+    general = Pool.general
     puts "✅ Demo cargada: #{Team.count} equipos, #{Match.count} partidos " \
          "(#{Match.where(status: 'finished').count} jugados, #{Match.where(stage: 'quarter_final').count} cuartos por jugar), " \
-         "#{Player.count} jugadores demo, #{Prediction.count} pronósticos."
+         "#{Player.count} jugadores demo, #{Prediction.count} pronósticos, #{Pool.count} pollas."
+    puts "Líder General: #{ScoringService.standings(general).first&.dig(:player)&.name}"
     puts ""
     puts "Para explorar: bin/dev → entra con tu nombre →"
     puts "  • Grupos: las 12 tablas calculadas de los resultados"
