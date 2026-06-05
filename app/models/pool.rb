@@ -8,6 +8,10 @@ class Pool < ApplicationRecord
 
   validates :name, presence: true
   validates :invite_token, presence: true, uniqueness: true
+  validates :exact_points, :outcome_points, :champion_bonus, :top_scorer_bonus,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  def rules_locked? = tournament.started?
 
   before_validation :ensure_invite_token, on: :create
 

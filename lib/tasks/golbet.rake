@@ -40,7 +40,8 @@ namespace :golbet do
     }.freeze
 
     ActiveRecord::Base.transaction do
-      [Membership, Pool, Prediction, SpecialPrediction, Match, Team, Player, Tournament].each(&:delete_all)
+      # Delete children before parents to satisfy FK constraints (delete_all is raw, no cascade).
+      [Prediction, SpecialPrediction, Membership, Pool, Match, Team, Player, Tournament].each(&:delete_all)
       t = Tournament.create!(name: "Mundial 2026")
       general = Pool.create!(name: "Mundial — General", tournament: t, public: true)
 
@@ -113,7 +114,8 @@ namespace :golbet do
 
       # Example PRIVATE pool to showcase the pools UI (registered owner + a couple members)
       owner = Player.create!(name: "Capitán", email: "capi@example.com", email_verified_at: Time.current)
-      privada = Pool.create!(name: "Los Cracks", tournament: t, owner: owner)
+      privada = Pool.create!(name: "Los Cracks", tournament: t, owner: owner,
+                             knockout_multipliers: false, champion_bonus: 30)
       [owner, Player.find_by(name: "Ana"), Player.find_by(name: "Beto")].each { |pl| Membership.create!(player: pl, pool: privada) }
       # Tournament left UNRESOLVED (final not played) — resolve it from /admin to award bonuses.
     end

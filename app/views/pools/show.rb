@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Views::Pools::Show < Views::Base
-  def initialize(pool:, owner:)
+  def initialize(pool:, owner:, rules_locked:)
     @pool = pool
     @owner = owner
+    @locked = rules_locked
   end
 
   def view_template
@@ -11,10 +12,28 @@ class Views::Pools::Show < Views::Base
       page_header(@pool.name, "Polla con tus amigos.")
       members_card
       invite_card if @owner
+      rules_card
     end
   end
 
   private
+
+  def rules_card
+    div(class: "mt-6 rounded-lg border border-border p-4") do
+      h3(class: "font-medium mb-2") { "Reglas" }
+      p(class: "text-sm text-muted-foreground") { rules_summary(@pool) }
+      if @owner && !@locked
+        form(action: pool_path(@pool), method: "post", class: "mt-4 space-y-2") do
+          input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
+          input(type: "hidden", name: "_method", value: "patch")
+          rules_fields(@pool)
+          render Components::UI::Button.new(type: "submit", appearance: :primary) { "Guardar reglas" }
+        end
+      elsif @owner && @locked
+        p(class: "mt-2 text-sm text-muted-foreground") { "Reglas bloqueadas — el torneo ya empezó." }
+      end
+    end
+  end
 
   def members_card
     render Components::UI::Card.new do
