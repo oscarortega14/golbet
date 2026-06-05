@@ -112,6 +112,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_210518) do
   end
 
   create_table "tournaments", force: :cascade do |t|
+    t.boolean "active", default: false, null: false
     t.integer "champion_team_id"
     t.datetime "created_at", null: false
     t.string "name"
