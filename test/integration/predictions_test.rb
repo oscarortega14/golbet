@@ -7,6 +7,7 @@ class PredictionsTest < ActionDispatch::IntegrationTest
     @bra = @t.teams.create!(name: "Brasil", code: "BRA", flag: "🇧🇷", group: "A")
     @uru = @t.teams.create!(name: "Uruguay", code: "URU", flag: "🇺🇾", group: "B")
     @chi = @t.teams.create!(name: "Chile", code: "CHI", flag: "🇨🇱", group: "B")
+    @pool = Pool.create!(tournament: @t, name: "General", public: true)
   end
 
   def login(name)

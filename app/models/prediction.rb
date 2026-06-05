@@ -1,11 +1,12 @@
 class Prediction < ApplicationRecord
   belongs_to :player
   belongs_to :match
+  belongs_to :pool
 
   validates :home_pred, :away_pred,
             presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :match_id, uniqueness: { scope: :player_id }
+  validates :match_id, uniqueness: { scope: [:player_id, :pool_id] }
   validate :match_not_locked
   validate :match_has_teams
 
