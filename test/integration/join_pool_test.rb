@@ -23,4 +23,11 @@ class JoinPoolTest < ActionDispatch::IntegrationTest
       post join_path(@pool.invite_token)
     end
   end
+
+  test "a cold-start guest is routed to join after identifying" do
+    get join_path(@pool.invite_token)            # no current_player yet
+    assert_redirected_to root_path
+    post session_path, params: { name: "Nuevo" } # identify with a name
+    assert_redirected_to join_path(@pool.invite_token)
+  end
 end

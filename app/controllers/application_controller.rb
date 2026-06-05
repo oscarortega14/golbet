@@ -36,4 +36,11 @@ class ApplicationController < ActionController::Base
       redirect_to root_path
     end
   end
+
+  # If a guest opened an invite link before identifying, we stashed the token.
+  # Consume it after they identify so they land on the join screen for that pool.
+  def pending_join_path
+    token = session.delete(:after_join_token)
+    join_path(token) if token.present?
+  end
 end

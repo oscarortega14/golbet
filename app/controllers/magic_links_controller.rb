@@ -16,10 +16,11 @@ class MagicLinksController < ApplicationController
     player.update!(email_verified_at: Time.current) unless was_verified
     cookies.signed.permanent[:player_token] = player.session_token
 
+    join = pending_join_path
     if was_verified
-      redirect_to predictions_path, notice: "¡Sesión iniciada!"
+      redirect_to(join || predictions_path, notice: "¡Sesión iniciada!")
     else
-      redirect_to account_path, notice: "¡Cuenta confirmada! Ya puedes entrar desde cualquier dispositivo."
+      redirect_to(join || account_path, notice: "¡Cuenta confirmada! Ya puedes entrar desde cualquier dispositivo.")
     end
   end
 end

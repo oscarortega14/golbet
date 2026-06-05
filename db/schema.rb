@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_05_193525) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_202957) do
   create_table "matches", force: :cascade do |t|
     t.string "away_label"
     t.integer "away_score"
@@ -62,6 +62,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_193525) do
     t.datetime "updated_at", null: false
     t.index ["invite_token"], name: "index_pools_on_invite_token", unique: true
     t.index ["owner_id"], name: "index_pools_on_owner_id"
+    t.index ["public"], name: "index_pools_on_single_public", unique: true, where: "public = 1"
     t.index ["tournament_id"], name: "index_pools_on_tournament_id"
   end
 
