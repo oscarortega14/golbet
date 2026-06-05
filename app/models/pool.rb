@@ -15,7 +15,7 @@ class Pool < ApplicationRecord
 
   before_validation :ensure_invite_token, on: :create
 
-  def self.general = find_by(public: true)
+  def self.general_for(tournament) = find_by(tournament: tournament, public: true)
 
   private
 

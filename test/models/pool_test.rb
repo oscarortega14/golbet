@@ -15,10 +15,25 @@ class PoolTest < ActiveSupport::TestCase
     assert_not dup.valid?
   end
 
-  test ".general finds the public pool" do
+  test ".general_for finds the public pool of a tournament" do
     Pool.create!(tournament: @t, name: "Privada")
     g = Pool.create!(tournament: @t, name: "General", public: true)
-    assert_equal g, Pool.general
+    assert_equal g, Pool.general_for(@t)
+  end
+
+  test ".general_for is scoped per tournament" do
+    other = Tournament.create!(name: "Copa")
+    g1 = Pool.create!(tournament: @t, name: "General", public: true)
+    g2 = Pool.create!(tournament: other, name: "General", public: true)
+    assert_equal g1, Pool.general_for(@t)
+    assert_equal g2, Pool.general_for(other)
+  end
+
+  test "only one public General per tournament is allowed" do
+    Pool.create!(tournament: @t, name: "General", public: true)
+    assert_raises(ActiveRecord::RecordNotUnique) do
+      Pool.create!(tournament: @t, name: "General 2", public: true)
+    end
   end
 
   test "defaults match the standard scoring" do
