@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_224833) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_190928) do
   create_table "matches", force: :cascade do |t|
     t.string "away_label"
     t.integer "away_score"
@@ -31,6 +31,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_224833) do
     t.index ["tournament_id"], name: "index_matches_on_tournament_id"
   end
 
+  create_table "memberships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "player_id", null: false
+    t.integer "pool_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_id", "pool_id"], name: "index_memberships_on_player_id_and_pool_id", unique: true
+    t.index ["player_id"], name: "index_memberships_on_player_id"
+    t.index ["pool_id"], name: "index_memberships_on_pool_id"
+  end
+
   create_table "players", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email"
@@ -40,6 +50,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_224833) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_players_on_email", unique: true
     t.index ["session_token"], name: "index_players_on_session_token", unique: true
+  end
+
+  create_table "pools", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "invite_token", null: false
+    t.string "name", null: false
+    t.integer "owner_id"
+    t.boolean "public", default: false, null: false
+    t.integer "tournament_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invite_token"], name: "index_pools_on_invite_token", unique: true
+    t.index ["owner_id"], name: "index_pools_on_owner_id"
+    t.index ["tournament_id"], name: "index_pools_on_tournament_id"
   end
 
   create_table "predictions", force: :cascade do |t|
@@ -91,6 +114,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_224833) do
   add_foreign_key "matches", "teams", column: "away_team_id"
   add_foreign_key "matches", "teams", column: "home_team_id"
   add_foreign_key "matches", "tournaments"
+  add_foreign_key "memberships", "players"
+  add_foreign_key "memberships", "pools"
+  add_foreign_key "pools", "players", column: "owner_id"
+  add_foreign_key "pools", "tournaments"
   add_foreign_key "predictions", "matches"
   add_foreign_key "predictions", "players"
   add_foreign_key "special_predictions", "players"
