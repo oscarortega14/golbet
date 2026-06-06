@@ -1,8 +1,8 @@
 module Admin
   class MatchesController < BaseController
     def index
-      @tournament = Tournament.first || Tournament.create!(name: "Mundial 2026")
-      scope = @tournament.matches.includes(:home_team, :away_team).order(:kickoff_at)
+      @tournament = current_admin_tournament
+      scope = @tournament ? @tournament.matches.includes(:home_team, :away_team).order(:kickoff_at) : Match.none
       scope = scope.where(stage: params[:stage]) if params[:stage].present?
       scope = scope.where(group: params[:group]) if params[:group].present?
       render Views::Admin::Matches::Index.new(tournament: @tournament, matches: scope, filters: params.slice(:stage, :group).to_unsafe_h)
@@ -23,7 +23,7 @@ module Admin
 
     private
 
-    def teams = (Tournament.first&.teams&.order(:group, :name) || [])
+    def teams = (current_admin_tournament&.teams&.order(:group, :name) || [])
 
     def match_params
       params.require(:match).permit(:home_team_id, :away_team_id, :kickoff_at, :stage, :group)

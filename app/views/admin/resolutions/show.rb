@@ -8,6 +8,7 @@ class Views::Admin::Resolutions::Show < Views::Base
 
   def view_template
     render Views::Layout.new(active: nil) do
+      admin_tournament_selector(Tournament.order(active: :desc, name: :asc).to_a, @tournament&.id)
       page_header("Resolver torneo", "Define el campeón y el goleador para otorgar los bonos.")
       render Components::UI::Card.new(class: "max-w-lg") do
         render Components::UI::CardContent.new(padding: :standalone) do

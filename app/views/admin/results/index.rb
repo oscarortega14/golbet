@@ -4,13 +4,15 @@ class Views::Admin::Results::Index < Views::Base
   STAGES = Match::STAGES
   GROUPS = ("A".."L").to_a
 
-  def initialize(matches:, filters: {})
+  def initialize(matches:, filters: {}, current_id: nil)
     @matches = matches
     @filters = filters || {}
+    @current_id = current_id
   end
 
   def view_template
     render Views::Layout.new(active: nil) do
+      admin_tournament_selector(Tournament.order(active: :desc, name: :asc).to_a, @current_id)
       h2(class: "text-xl font-semibold mb-4") { "Cargar resultados" }
       filter_bar
       div(class: "space-y-2") do
