@@ -29,7 +29,7 @@ class ScoringService
 
   def self.special_points(special_prediction)
     pool = special_prediction.pool
-    return 0 unless pool&.special_enabled
+    return 0 unless pool&.special_available?
     tournament = pool.tournament
     pts = 0
     if tournament.champion_team_id.present? && special_prediction.champion_team_id == tournament.champion_team_id
@@ -43,8 +43,7 @@ class ScoringService
   end
 
   def self.standings(pool)
-    tournament = pool.tournament
-    finished = tournament.matches.where(status: "finished").to_a
+    finished = pool.matches_in_scope.where(status: "finished").to_a
     by_match = finished.index_by(&:id)
 
     totals = Hash.new(0)

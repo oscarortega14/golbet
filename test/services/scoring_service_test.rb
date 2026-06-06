@@ -150,4 +150,32 @@ class ScoringServiceTest < ActiveSupport::TestCase
     assert_equal 3, ScoringService.standings(@pool).first[:points]
     assert_equal 10, ScoringService.standings(rich).first[:points]
   end
+
+  test "standings only counts matches in the pool's stage scope" do
+    g = finished_match(2, 1) # group
+    final = @tournament.matches.create!(stage: "final", home_team: @arg, away_team: @bra,
+      kickoff_at: 2.hours.ago, status: "finished", home_score: 0, away_score: 0)
+    grupos = Pool.create!(tournament: @tournament, name: "Grupos", stages: ["group"])
+    Prediction.new(player: @player, pool: grupos, match: g, home_pred: 2, away_pred: 1).save!(validate: false)   # 3
+    Prediction.new(player: @player, pool: grupos, match: final, home_pred: 0, away_pred: 0).save!(validate: false) # fuera de alcance
+    row = ScoringService.standings(grupos).find { |r| r[:player] == @player }
+    assert_equal 3, row[:points] # solo el partido de grupos
+  end
+
+  test "standings for a single-match pool counts only that match" do
+    g1 = finished_match(2, 1)
+    g2 = finished_match(1, 0)
+    one = Pool.create!(tournament: @tournament, name: "Uno", modality: "match", focus_match: g1)
+    Prediction.new(player: @player, pool: one, match: g1, home_pred: 2, away_pred: 1).save!(validate: false) # 3
+    Prediction.new(player: @player, pool: one, match: g2, home_pred: 1, away_pred: 0).save!(validate: false) # fuera de alcance
+    row = ScoringService.standings(one).find { |r| r[:player] == @player }
+    assert_equal 3, row[:points]
+  end
+
+  test "special_points is zero for non-full pools even when enabled" do
+    @tournament.update!(champion_team: @arg, top_scorer: "Messi")
+    partial = Pool.create!(tournament: @tournament, name: "Parcial", stages: ["group"])
+    sp = SpecialPrediction.new(pool: partial, champion_team: @arg, top_scorer: "Messi")
+    assert_equal 0, ScoringService.special_points(sp)
+  end
 end
