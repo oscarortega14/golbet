@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   resources :results, only: [:index]
   resources :standings, only: [:index]
   resources :groups, only: [:index]
+  resources :tournaments, only: [:index], path: "torneos" do
+    post :join_general, on: :member
+  end
   resources :pools, only: [:index, :create, :show, :update], path: "pollas"
   post "pollas/:id/select", to: "pools#select", as: :select_pool
   get  "unirse/:token", to: "memberships#new", as: :join
