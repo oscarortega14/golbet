@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_05_210518) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_06_000001) do
   create_table "matches", force: :cascade do |t|
     t.string "away_label"
     t.integer "away_score"
@@ -56,16 +56,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_210518) do
     t.integer "champion_bonus", default: 15, null: false
     t.datetime "created_at", null: false
     t.integer "exact_points", default: 3, null: false
+    t.integer "focus_match_id"
     t.string "invite_token", null: false
     t.boolean "knockout_multipliers", default: true, null: false
+    t.string "modality", default: "stages", null: false
     t.string "name", null: false
     t.integer "outcome_points", default: 1, null: false
     t.integer "owner_id"
     t.boolean "public", default: false, null: false
     t.boolean "special_enabled", default: true, null: false
+    t.text "stages"
     t.integer "top_scorer_bonus", default: 10, null: false
     t.integer "tournament_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["focus_match_id"], name: "index_pools_on_focus_match_id"
     t.index ["invite_token"], name: "index_pools_on_invite_token", unique: true
     t.index ["owner_id"], name: "index_pools_on_owner_id"
     t.index ["tournament_id"], name: "index_pools_on_general_per_tournament", unique: true, where: "public = 1"
@@ -126,6 +130,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_210518) do
   add_foreign_key "matches", "tournaments"
   add_foreign_key "memberships", "players"
   add_foreign_key "memberships", "pools"
+  add_foreign_key "pools", "matches", column: "focus_match_id"
   add_foreign_key "pools", "players", column: "owner_id"
   add_foreign_key "pools", "tournaments"
   add_foreign_key "predictions", "matches"
