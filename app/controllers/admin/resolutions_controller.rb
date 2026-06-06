@@ -16,6 +16,6 @@ module Admin
 
     private
 
-    def tournament = Tournament.first || Tournament.create!(name: "Mundial 2026")
+    def tournament = current_admin_tournament
   end
 end

@@ -18,6 +18,27 @@ class Views::Base < Components::Base
     end
   end
 
+  # Selector de torneo para las páginas de admin (cambia session[:admin_tournament_id]).
+  def admin_tournament_selector(tournaments, current_id)
+    return if tournaments.size <= 1
+    form(method: "get", class: "mb-4 flex items-end gap-2", data: { turbo: false }) do
+      div(class: "space-y-1.5") do
+        render(Components::UI::Label.new(for_: "admin_tournament")) { "Torneo" }
+        select(id: "admin_tournament", name: "admin_tournament",
+               onchange: safe("this.form.submit()"),
+               class: "rounded-md border border-border bg-background px-3 py-2 text-sm") do
+          tournaments.each do |t|
+            if t.id == current_id
+              option(value: t.id, selected: true) { t.name }
+            else
+              option(value: t.id) { t.name }
+            end
+          end
+        end
+      end
+    end
+  end
+
   RULE_NUMBERS = [
     [:exact_points, "Puntos por marcador exacto"],
     [:outcome_points, "Puntos por acertar resultado"],

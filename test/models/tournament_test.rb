@@ -24,4 +24,28 @@ class TournamentTest < ActiveSupport::TestCase
     assert_equal team, @t.reload.champion_team
     assert_equal "Messi", @t.top_scorer
   end
+
+  test "the first tournament created becomes active automatically" do
+    assert @t.reload.active?
+    assert_equal @t, Tournament.active
+  end
+
+  test "a second tournament is not active by default" do
+    other = Tournament.create!(name: "Copa")
+    assert_not other.active?
+    assert_equal @t, Tournament.active
+  end
+
+  test "activating a tournament deactivates the others" do
+    other = Tournament.create!(name: "Copa")
+    other.activate!
+    assert other.reload.active?
+    assert_not @t.reload.active?
+    assert_equal other, Tournament.active
+  end
+
+  test "Tournament.active returns nil when none active" do
+    @t.update_column(:active, false)
+    assert_nil Tournament.active
+  end
 end

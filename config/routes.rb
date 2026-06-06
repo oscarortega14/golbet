@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   resources :results, only: [:index]
   resources :standings, only: [:index]
   resources :groups, only: [:index]
+  resources :tournaments, only: [:index], path: "torneos" do
+    post :join_general, on: :member
+  end
   resources :pools, only: [:index, :create, :show, :update], path: "pollas"
   post "pollas/:id/select", to: "pools#select", as: :select_pool
   get  "unirse/:token", to: "memberships#new", as: :join
@@ -29,6 +32,13 @@ Rails.application.routes.draw do
   namespace :admin do
     get  "login", to: "sessions#new"
     post "login", to: "sessions#create"
+    resources :tournaments, only: [:index, :create] do
+      member do
+        patch :activate
+        post  :select
+        post  :import_fixtures
+      end
+    end
     resources :matches, only: [:index, :edit, :update]
     resources :results, only: [:index, :update]
     resource :resolution, only: [:show, :update]

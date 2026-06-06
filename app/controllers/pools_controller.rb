@@ -10,7 +10,8 @@ class PoolsController < ApplicationController
         current: p.id == current_pool&.id
       }
     end
-    render Views::Pools::Index.new(rows: rows, can_create: current_player.registered?)
+    render Views::Pools::Index.new(rows: rows, can_create: current_player.registered?,
+                                   tournaments: Tournament.order(:name).to_a)
   end
 
   def show
@@ -22,7 +23,11 @@ class PoolsController < ApplicationController
     unless current_player.registered?
       redirect_to account_path, alert: "Verifica tu email para crear una polla." and return
     end
-    pool = Pool.new(pool_rule_params.merge(name: params[:name], tournament: Tournament.first, owner: current_player))
+    tournament = Tournament.find_by(id: params[:tournament_id]) || Tournament.active
+    unless tournament
+      redirect_to pools_path, alert: "No hay torneo disponible." and return
+    end
+    pool = Pool.new(pool_rule_params.merge(name: params[:name], tournament: tournament, owner: current_player))
     if pool.save
       Membership.find_or_create_by!(player: current_player, pool: pool)
       session[:pool_id] = pool.id

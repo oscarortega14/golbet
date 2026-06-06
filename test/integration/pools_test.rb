@@ -1,7 +1,10 @@
 require "test_helper"
 
 class PoolsTest < ActionDispatch::IntegrationTest
-  setup { @t = Tournament.create!(name: "Mundial 2026") }
+  setup do
+    @t = Tournament.create!(name: "Mundial 2026")
+    @copa = Tournament.create!(name: "Copa América")
+  end
 
   def register_and_login(name, email)
     post session_path, params: { name: name }
@@ -36,5 +39,19 @@ class PoolsTest < ActionDispatch::IntegrationTest
     get pools_path
     assert_response :success
     assert_match "Los Cracks", response.body
+  end
+
+  test "creating a pool uses the chosen tournament" do
+    register_and_login("Ana", "ana@example.com")
+    post pools_path, params: { name: "Cracks Copa", tournament_id: @copa.id }
+    pool = Pool.find_by(name: "Cracks Copa")
+    assert_equal @copa, pool.tournament
+  end
+
+  test "creating a pool without tournament_id falls back to the active tournament" do
+    register_and_login("Ana", "ana@example.com")
+    post pools_path, params: { name: "Cracks" }
+    pool = Pool.find_by(name: "Cracks")
+    assert_equal @t, pool.tournament   # @t es el activo (primero creado)
   end
 end

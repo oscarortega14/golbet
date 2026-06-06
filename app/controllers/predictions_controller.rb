@@ -8,7 +8,7 @@ class PredictionsController < ApplicationController
   }.freeze
 
   def index
-    @tournament = Tournament.first
+    @tournament = current_pool&.tournament
     matches = @tournament ? @tournament.matches.includes(:home_team, :away_team).order(:kickoff_at) : []
     grouped = matches.group_by(&:stage)
                      .sort_by { |stage, _| Match::STAGES.index(stage) }

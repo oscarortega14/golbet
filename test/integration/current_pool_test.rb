@@ -7,7 +7,7 @@ class CurrentPoolTest < ActionDispatch::IntegrationTest
     post session_path, params: { name: "Ana" }
     get predictions_path
     player = Player.find_by(name: "Ana")
-    general = Pool.general
+    general = Pool.general_for(@t)
     assert_not_nil general
     assert player.pools.include?(general)
   end

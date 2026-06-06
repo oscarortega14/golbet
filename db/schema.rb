@@ -68,7 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_210518) do
     t.datetime "updated_at", null: false
     t.index ["invite_token"], name: "index_pools_on_invite_token", unique: true
     t.index ["owner_id"], name: "index_pools_on_owner_id"
-    t.index ["public"], name: "index_pools_on_single_public", unique: true, where: "public = 1"
+    t.index ["tournament_id"], name: "index_pools_on_general_per_tournament", unique: true, where: "public = 1"
     t.index ["tournament_id"], name: "index_pools_on_tournament_id"
   end
 
@@ -112,6 +112,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_210518) do
   end
 
   create_table "tournaments", force: :cascade do |t|
+    t.boolean "active", default: false, null: false
     t.integer "champion_team_id"
     t.datetime "created_at", null: false
     t.string "name"

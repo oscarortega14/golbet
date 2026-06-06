@@ -1,11 +1,11 @@
 module Admin
   class ResultsController < BaseController
     def index
-      tournament = Tournament.first || Tournament.create!(name: "Mundial 2026")
-      scope = tournament.matches.includes(:home_team, :away_team).order(:kickoff_at)
+      tournament = current_admin_tournament
+      scope = tournament ? tournament.matches.includes(:home_team, :away_team).order(:kickoff_at) : Match.none
       scope = scope.where(stage: params[:stage]) if params[:stage].present?
       scope = scope.where(group: params[:group]) if params[:group].present?
-      render Views::Admin::Results::Index.new(matches: scope, filters: params.slice(:stage, :group).to_unsafe_h)
+      render Views::Admin::Results::Index.new(matches: scope, filters: params.slice(:stage, :group).to_unsafe_h, current_id: tournament&.id)
     end
 
     def update
