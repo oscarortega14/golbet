@@ -34,4 +34,18 @@ class AdminTournamentScopeTest < ActionDispatch::IntegrationTest
     assert_equal team, @copa.reload.champion_team
     assert_nil @mundial.reload.champion_team
   end
+
+  test "the admin_tournament query param persists the selection to the session" do
+    # Selecciona la Copa vía el query param del dropdown (GET), no la acción select
+    get admin_matches_path(admin_tournament: @copa.id)
+    assert_response :success
+    assert_match "Copa América", response.body
+    assert_match "Brasil", response.body
+
+    # La selección persiste en la sesión: una visita posterior SIN el param sigue mostrando la Copa
+    get admin_matches_path
+    assert_response :success
+    assert_match "Partidos — Copa América", response.body
+    assert_no_match(/Partidos — Mundial 2026/, response.body)
+  end
 end
