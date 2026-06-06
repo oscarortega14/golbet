@@ -117,11 +117,22 @@ namespace :golbet do
       privada = Pool.create!(name: "Los Cracks", tournament: t, owner: owner,
                              knockout_multipliers: false, champion_bonus: 30)
       [owner, Player.find_by(name: "Ana"), Player.find_by(name: "Beto")].each { |pl| Membership.create!(player: pl, pool: privada) }
+
+      # --- Segundo torneo (corto) para mostrar el multi-torneo ---
+      copa = Tournament.create!(name: "Copa América 2026")   # no activo (el Mundial es el activo)
+      copa_general = Pool.create!(name: "#{copa.name} — General", tournament: copa, public: true)
+      copa_teams = [["Brasil", "BRA2", "🇧🇷"], ["Uruguay", "URU2", "🇺🇾"], ["Argentina", "ARG2", "🇦🇷"], ["Colombia", "COL2", "🇨🇴"]]
+                   .map { |name, code, flag| copa.teams.create!(name:, code:, flag:, group: "A") }
+      copa.matches.create!(stage: "group", group: "A", home_team: copa_teams[0], away_team: copa_teams[1],
+                           kickoff_at: 1.day.ago, status: "finished", home_score: 2, away_score: 1)
+      copa.matches.create!(stage: "group", group: "A", home_team: copa_teams[2], away_team: copa_teams[3],
+                           kickoff_at: 1.day.from_now, status: "scheduled")
+      Membership.create!(player: Player.find_by(name: "Ana"), pool: copa_general)
       # Tournament left UNRESOLVED (final not played) — resolve it from /admin to award bonuses.
     end
 
     t = Tournament.first
-    general = Pool.general
+    general = Pool.general_for(Tournament.find_by(name: "Mundial 2026"))
     puts "✅ Demo cargada: #{Team.count} equipos, #{Match.count} partidos " \
          "(#{Match.where(status: 'finished').count} jugados, #{Match.where(stage: 'quarter_final').count} cuartos por jugar), " \
          "#{Player.count} jugadores demo, #{Prediction.count} pronósticos, #{Pool.count} pollas."
