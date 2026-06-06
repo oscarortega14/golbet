@@ -54,4 +54,32 @@ class PoolsTest < ActionDispatch::IntegrationTest
     pool = Pool.find_by(name: "Cracks")
     assert_equal @t, pool.tournament   # @t es el activo (primero creado)
   end
+
+  test "creating a stages pool with a subset persists the stages" do
+    register_and_login("Ana", "ana@example.com")
+    post pools_path, params: { name: "Grupos", modality: "stages", stages: ["group", "final"] }
+    pool = Pool.find_by(name: "Grupos")
+    assert_equal "stages", pool.modality
+    assert_equal ["final", "group"], pool.effective_stages.sort
+    assert_not pool.full_tournament?
+  end
+
+  test "creating a match pool derives the tournament from the chosen match" do
+    m = @copa.matches.create!(stage: "group", group: "A", home_label: "X", away_label: "Y", kickoff_at: 1.day.from_now)
+    register_and_login("Ana", "ana@example.com")
+    # tournament_id apunta a @t, pero el partido es de @copa → el torneo debe seguir al partido
+    post pools_path, params: { name: "Partidazo", modality: "match", focus_match_id: m.id, tournament_id: @t.id }
+    pool = Pool.find_by(name: "Partidazo")
+    assert_equal "match", pool.modality
+    assert_equal @copa, pool.tournament
+    assert_equal m, pool.focus_match
+  end
+
+  test "owner edits modality before the tournament starts" do
+    register_and_login("Ana", "ana@example.com")
+    post pools_path, params: { name: "Editable" }
+    pool = Pool.find_by(name: "Editable")
+    patch pool_path(pool), params: { modality: "stages", stages: ["group"] }
+    assert_equal ["group"], pool.reload.effective_stages
+  end
 end
