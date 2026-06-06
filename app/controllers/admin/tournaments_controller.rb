@@ -29,5 +29,21 @@ module Admin
       session[:admin_tournament_id] = tournament.id
       redirect_back fallback_location: admin_tournaments_path
     end
+
+    def import_fixtures
+      tournament = Tournament.find(params[:id])
+      teams_csv = params[:teams_csv]&.read&.force_encoding("UTF-8")
+      matches_csv = params[:matches_csv]&.read&.force_encoding("UTF-8")
+      if teams_csv.blank? || matches_csv.blank?
+        redirect_to admin_tournaments_path, alert: "Sube ambos CSV (equipos y partidos)." and return
+      end
+      result = FixtureImporter.new(tournament, teams_csv: teams_csv, matches_csv: matches_csv).import
+      KnockoutBracketBuilder.new(tournament).build
+      if result.success?
+        redirect_to admin_tournaments_path, notice: "Fixtures cargados en #{tournament.name}."
+      else
+        redirect_to admin_tournaments_path, alert: "Errores: #{result.errors.first}"
+      end
+    end
   end
 end
