@@ -32,6 +32,13 @@ Rails.application.routes.draw do
   namespace :admin do
     get  "login", to: "sessions#new"
     post "login", to: "sessions#create"
+    resources :tournaments, only: [:index, :create] do
+      member do
+        patch :activate
+        post  :select
+        post  :import_fixtures
+      end
+    end
     resources :matches, only: [:index, :edit, :update]
     resources :results, only: [:index, :update]
     resource :resolution, only: [:show, :update]
