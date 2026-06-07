@@ -56,4 +56,63 @@ class PoolTest < ActiveSupport::TestCase
     @t.matches.create!(stage: "group", kickoff_at: 1.hour.ago, home_label: "A", away_label: "B")
     assert pool.reload.rules_locked?
   end
+
+  test "defaults to full-tournament stages modality" do
+    pool = Pool.create!(tournament: @t, name: "Full")
+    assert_equal "stages", pool.modality
+    assert_equal Match::STAGES.sort, pool.effective_stages.sort
+    assert pool.full_tournament?
+  end
+
+  test "matches_in_scope filters by stages" do
+    g = @t.matches.create!(stage: "group", kickoff_at: 1.hour.from_now, home_label: "A", away_label: "B")
+    f = @t.matches.create!(stage: "final", kickoff_at: 2.hours.from_now, home_label: "C", away_label: "D")
+    grupos = Pool.create!(tournament: @t, name: "Grupos", stages: ["group"])
+    assert_equal [g.id], grupos.matches_in_scope.pluck(:id)
+    assert_not grupos.full_tournament?
+    full = Pool.create!(tournament: @t, name: "Full2")
+    assert_equal [g.id, f.id].sort, full.matches_in_scope.pluck(:id).sort
+  end
+
+  test "match modality scopes to the chosen match" do
+    g = @t.matches.create!(stage: "group", kickoff_at: 1.hour.from_now, home_label: "A", away_label: "B")
+    @t.matches.create!(stage: "group", kickoff_at: 1.hour.from_now, home_label: "C", away_label: "D")
+    pool = Pool.create!(tournament: @t, name: "Partidazo", modality: "match", focus_match: g)
+    assert_equal [g.id], pool.matches_in_scope.pluck(:id)
+    assert_not pool.full_tournament?
+  end
+
+  test "rejects an invalid modality" do
+    assert_not Pool.new(tournament: @t, name: "X", modality: "weird").valid?
+  end
+
+  test "rejects stages outside the known stages" do
+    assert_not Pool.new(tournament: @t, name: "X", stages: ["nope"]).valid?
+  end
+
+  test "rejects an empty explicit stages set" do
+    assert_not Pool.new(tournament: @t, name: "X", stages: []).valid?
+  end
+
+  test "match modality requires a focus_match" do
+    assert_not Pool.new(tournament: @t, name: "X", modality: "match").valid?
+  end
+
+  test "focus_match must belong to the pool's tournament" do
+    other = Tournament.create!(name: "Otro")
+    m = other.matches.create!(stage: "group", kickoff_at: 1.hour.from_now, home_label: "A", away_label: "B")
+    assert_not Pool.new(tournament: @t, name: "X", modality: "match", focus_match: m).valid?
+  end
+
+  test "special_available? requires full tournament and special_enabled" do
+    assert Pool.create!(tournament: @t, name: "Full3").special_available?
+    assert_not Pool.create!(tournament: @t, name: "Parcial", stages: ["group"]).special_available?
+    assert_not Pool.create!(tournament: @t, name: "NoSpecial", special_enabled: false).special_available?
+  end
+
+  test "match modality rejects a non-existent focus_match" do
+    pool = Pool.new(tournament: @t, name: "X", modality: "match", focus_match_id: 999_999)
+    assert_not pool.valid?
+    assert_includes pool.errors.attribute_names, :focus_match
+  end
 end

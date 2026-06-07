@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Views::Pools::Index < Views::Base
-  def initialize(rows:, can_create:, tournaments: [])
+  def initialize(rows:, can_create:, tournaments: [], match_options: [])
     @rows = rows
     @can_create = can_create
     @tournaments = tournaments
+    @match_options = match_options
   end
 
   def view_template
@@ -87,6 +88,10 @@ class Views::Pools::Index < Views::Base
         end
       elsif @tournaments.size == 1
         input(type: "hidden", name: "tournament_id", value: @tournaments.first.id)
+      end
+      div(class: "mt-3 space-y-2 rounded-md border border-border p-3") do
+        p(class: "text-sm font-medium") { "Modalidad" }
+        modality_fields(Pool.new, @match_options)
       end
       div(class: "mt-3 space-y-2 rounded-md border border-border p-3") do
         p(class: "text-sm font-medium") { "Reglas" }

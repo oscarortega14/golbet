@@ -128,6 +128,15 @@ namespace :golbet do
       copa.matches.create!(stage: "group", group: "A", home_team: copa_teams[2], away_team: copa_teams[3],
                            kickoff_at: 1.day.from_now, status: "scheduled")
       Membership.create!(player: Player.find_by(name: "Ana"), pool: copa_general)
+
+      # --- Pollas de ejemplo para mostrar las modalidades (P4) ---
+      grupos_pool = Pool.create!(name: "Solo grupos", tournament: t, owner: owner, modality: "stages", stages: ["group"])
+      Membership.create!(player: owner, pool: grupos_pool)
+      partido = t.matches.where(stage: "group", status: "finished").order(:kickoff_at).first
+      if partido
+        partidazo = Pool.create!(name: "El partidazo", tournament: t, owner: owner, modality: "match", focus_match: partido)
+        Membership.create!(player: owner, pool: partidazo)
+      end
       # Tournament left UNRESOLVED (final not played) — resolve it from /admin to award bonuses.
     end
 
