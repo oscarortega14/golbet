@@ -59,7 +59,7 @@ class Pool < ApplicationRecord
   def focus_match_in_tournament
     if focus_match_id.blank?
       errors.add(:focus_match, "es obligatorio para la modalidad de un partido")
-    elsif focus_match && focus_match.tournament_id != tournament_id
+    elsif focus_match.nil? || focus_match.tournament_id != tournament_id
       errors.add(:focus_match, "debe pertenecer al torneo de la polla")
     end
   end

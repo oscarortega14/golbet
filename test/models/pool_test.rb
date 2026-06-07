@@ -109,4 +109,10 @@ class PoolTest < ActiveSupport::TestCase
     assert_not Pool.create!(tournament: @t, name: "Parcial", stages: ["group"]).special_available?
     assert_not Pool.create!(tournament: @t, name: "NoSpecial", special_enabled: false).special_available?
   end
+
+  test "match modality rejects a non-existent focus_match" do
+    pool = Pool.new(tournament: @t, name: "X", modality: "match", focus_match_id: 999_999)
+    assert_not pool.valid?
+    assert_includes pool.errors.attribute_names, :focus_match
+  end
 end
