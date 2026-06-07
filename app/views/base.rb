@@ -46,6 +46,12 @@ class Views::Base < Components::Base
     [:top_scorer_bonus, "Bono goleador"]
   ].freeze
 
+  STAGE_LABELS_FORM = [
+    ["group", "Fase de grupos"], ["round_of_32", "Dieciseisavos"], ["round_of_16", "Octavos"],
+    ["quarter_final", "Cuartos"], ["semi_final", "Semifinal"], ["third_place", "Tercer puesto"],
+    ["final", "Final"]
+  ].freeze
+
   def rules_fields(pool)
     RULE_NUMBERS.each do |attr, label_text|
       render Components::UI::Label.new(for_: attr.to_s) { label_text }
@@ -66,10 +72,70 @@ class Views::Base < Components::Base
     end
   end
 
+  # Selector de modalidad: radio (fases / un partido) + checkboxes de fases + dropdown de partido.
+  # `match_options` es una colección de Match (con :tournament/:home_team/:away_team precargados).
+  def modality_fields(pool, match_options)
+    current = pool.modality.presence || "stages"
+    selected = pool.effective_stages
+    div(data: { controller: "modality-toggle" }, class: "space-y-3") do
+      div(class: "flex gap-4") do
+        modality_radio("stages", "Por fases", current)
+        modality_radio("match", "Un solo partido", current)
+      end
+      div(data: { "modality-toggle-target" => "stages" }, class: "space-y-1") do
+        p(class: "text-sm font-medium") { "Fases" }
+        STAGE_LABELS_FORM.each do |val, label_text|
+          label(class: "flex items-center gap-2 text-sm") do
+            attrs = { type: "checkbox", name: "stages[]", value: val }
+            attrs[:checked] = true if selected.include?(val)
+            input(**attrs)
+            span { label_text }
+          end
+        end
+      end
+      div(data: { "modality-toggle-target" => "match" }, class: "space-y-1") do
+        render(Components::UI::Label.new(for_: "focus_match_id")) { "Partido" }
+        select(id: "focus_match_id", name: "focus_match_id",
+               class: "w-full rounded-md border border-border bg-background px-3 py-2 text-sm") do
+          match_options.each do |m|
+            txt = "#{m.tournament.name} — #{m.display_home} vs #{m.display_away}"
+            if m.id == pool.focus_match_id
+              option(value: m.id, selected: true) { txt }
+            else
+              option(value: m.id) { txt }
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def modality_radio(value, label_text, current)
+    label(class: "flex items-center gap-2 text-sm") do
+      attrs = { type: "radio", name: "modality", value: value,
+                data: { action: "change->modality-toggle#switch" } }
+      attrs[:checked] = true if current == value
+      input(**attrs)
+      span { label_text }
+    end
+  end
+
+  def modality_summary(pool)
+    if pool.modality == "match"
+      m = pool.focus_match
+      m ? "Un partido: #{m.display_home} vs #{m.display_away}" : "Un partido"
+    elsif pool.full_tournament?
+      "Torneo completo"
+    else
+      labels = pool.effective_stages.map { |s| STAGE_LABELS_FORM.to_h[s] || s }
+      "Fases: #{labels.join(", ")}"
+    end
+  end
+
   def rules_summary(pool)
     mult = pool.knockout_multipliers ? "con multiplicadores" : "sin multiplicadores"
-    special = pool.special_enabled ? "campeón #{pool.champion_bonus} · goleador #{pool.top_scorer_bonus}" : "sin predicción especial"
-    "Exacto #{pool.exact_points} · Resultado #{pool.outcome_points} · Eliminatorias #{mult} · #{special}"
+    special = pool.special_available? ? "campeón #{pool.champion_bonus} · goleador #{pool.top_scorer_bonus}" : "sin predicción especial"
+    "#{modality_summary(pool)} · Exacto #{pool.exact_points} · Resultado #{pool.outcome_points} · Eliminatorias #{mult} · #{special}"
   end
 
   SUN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>'

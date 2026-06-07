@@ -26,6 +26,10 @@ class Views::Pools::Show < Views::Base
         form(action: pool_path(@pool), method: "post", class: "mt-4 space-y-2") do
           input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
           input(type: "hidden", name: "_method", value: "patch")
+          div(class: "space-y-2 rounded-md border border-border p-3") do
+            p(class: "text-sm font-medium") { "Modalidad" }
+            modality_fields(@pool, @pool.tournament.matches.includes(:tournament, :home_team, :away_team).order(:kickoff_at))
+          end
           rules_fields(@pool)
           render Components::UI::Button.new(type: "submit", appearance: :primary) { "Guardar reglas" }
         end

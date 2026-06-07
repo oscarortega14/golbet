@@ -11,7 +11,8 @@ class PoolsController < ApplicationController
       }
     end
     render Views::Pools::Index.new(rows: rows, can_create: current_player.registered?,
-                                   tournaments: Tournament.order(:name).to_a)
+                                   tournaments: Tournament.order(:name).to_a,
+                                   match_options: Match.includes(:tournament, :home_team, :away_team).order(:kickoff_at).to_a)
   end
 
   def show
