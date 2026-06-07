@@ -1,5 +1,6 @@
 class Player < ApplicationRecord
   has_many :predictions, dependent: :destroy
+  has_many :match_reminders, dependent: :destroy
   has_many :special_predictions, dependent: :destroy
   has_many :memberships, dependent: :destroy
   has_many :pools, through: :memberships

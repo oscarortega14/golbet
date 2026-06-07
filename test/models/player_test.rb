@@ -47,4 +47,8 @@ class PlayerTest < ActiveSupport::TestCase
     p.update!(email: "nuevo@example.com")
     assert_nil Player.find_by_token_for(:magic_link, token)
   end
+
+  test "email_reminders defaults to true" do
+    assert Player.create!(name: "Reminders").email_reminders
+  end
 end
