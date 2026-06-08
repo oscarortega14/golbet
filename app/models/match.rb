@@ -3,6 +3,7 @@ class Match < ApplicationRecord
   belongs_to :home_team, class_name: "Team", optional: true
   belongs_to :away_team, class_name: "Team", optional: true
   has_many :predictions, dependent: :destroy
+  has_many :match_reminders, dependent: :destroy
 
   STATUSES = %w[scheduled finished].freeze
   STAGES = %w[group round_of_32 round_of_16 quarter_final semi_final third_place final].freeze

@@ -13,6 +13,7 @@ class Views::Accounts::Show < Views::Base
           p(class: "text-sm text-muted-foreground") { "Jugando como" }
           p(class: "font-medium") { @player.name }
           status_line
+          reminders_form if @player.registered?
           email_form unless @player.registered?
           sign_out_form
         end
@@ -44,6 +45,21 @@ class Views::Accounts::Show < Views::Base
       render Components::UI::Input.new(type: "email", name: "email", placeholder: "tu@email.com",
         value: @player.email, required: true, class: "flex-1")
       render Components::UI::Button.new(type: "submit", appearance: :primary) { "Guardar cuenta" }
+    end
+  end
+
+  def reminders_form
+    form(action: account_path, method: "post", class: "space-y-2") do
+      input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
+      input(type: "hidden", name: "_method", value: "patch")
+      label(class: "flex items-center gap-2 text-sm") do
+        input(type: "hidden", name: "email_reminders", value: "0")
+        attrs = { type: "checkbox", name: "email_reminders", value: "1" }
+        attrs[:checked] = true if @player.email_reminders
+        input(**attrs)
+        span { "Recibir recordatorios por email" }
+      end
+      render Components::UI::Button.new(type: "submit", appearance: :secondary) { "Guardar preferencias" }
     end
   end
 

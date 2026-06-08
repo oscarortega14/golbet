@@ -1,0 +1,11 @@
+⚽ Golbet
+
+Hola <%= @player.name %>,
+
+El partido <%= @match.display_home %> vs <%= @match.display_away %> cierra el <%= @match.kickoff_at.strftime("%d/%m a las %H:%M") %> y aún te falta pronosticar.
+<% if @pools.any? %>
+Pendiente en: <%= @pools.map(&:name).join(", ") %>.
+<% end %>
+Pronostica aquí: <%= predictions_url %>
+
+¿No quieres estos recordatorios? Desactívalos en Mi cuenta: <%= account_url %>

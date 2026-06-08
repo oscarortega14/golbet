@@ -1,0 +1,10 @@
+<h1>⚽ Golbet</h1>
+<p>Hola <%= @player.name %>,</p>
+<p>El partido <strong><%= @match.display_home %> vs <%= @match.display_away %></strong>
+   cierra el <%= @match.kickoff_at.strftime("%d/%m a las %H:%M") %> y aún te falta pronosticar.</p>
+<% if @pools.any? %>
+  <p>Pendiente en: <%= @pools.map(&:name).join(", ") %>.</p>
+<% end %>
+<p><a href="<%= predictions_url %>">Pronosticar ahora</a></p>
+<p style="color:#888;font-size:12px">¿No quieres estos recordatorios?
+   Desactívalos en <a href="<%= account_url %>">Mi cuenta</a>.</p>

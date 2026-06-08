@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   post "login", to: "magic_links#request_login"
   root "sessions#new"
   resource :session, only: [:create, :destroy]
-  resource :account, only: [:show]
+  resource :account, only: [:show, :update]
   post "account/email", to: "accounts#request_verification"
   resources :predictions, only: [:index, :create]
   resource :special_prediction, only: [:create]
