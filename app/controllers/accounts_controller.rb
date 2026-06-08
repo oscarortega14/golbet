@@ -20,4 +20,9 @@ class AccountsController < ApplicationController
       redirect_to account_path, alert: current_player.errors.full_messages.first
     end
   end
+
+  def update
+    current_player.update(email_reminders: params[:email_reminders] == "1")
+    redirect_to account_path, notice: "Preferencias actualizadas."
+  end
 end
