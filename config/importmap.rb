@@ -18,3 +18,14 @@ pin "@internationalized/number", to: "@internationalized/number.js" # vendored b
 pin "@zag-js/types", to: "@zag-js/types.js" # vendored by wabi
 pin "@zag-js/store", to: "@zag-js/store.js" # vendored by wabi
 pin "proxy-compare", to: "proxy-compare.js" # vendored by wabi
+pin "@zag-js/tooltip", to: "@zag-js/tooltip.js" # vendored by wabi
+pin "@zag-js/menu", to: "@zag-js/menu.js" # vendored by wabi
+pin "@zag-js/focus-visible", to: "@zag-js/focus-visible.js" # vendored by wabi
+pin "@zag-js/popper", to: "@zag-js/popper.js" # vendored by wabi
+pin "@zag-js/rect-utils", to: "@zag-js/rect-utils.js" # vendored by wabi
+pin "@zag-js/dismissable", to: "@zag-js/dismissable.js" # vendored by wabi
+pin "@floating-ui/dom", to: "@floating-ui/dom.js" # vendored by wabi
+pin "@zag-js/interact-outside", to: "@zag-js/interact-outside.js" # vendored by wabi
+pin "@floating-ui/core", to: "@floating-ui/core.js" # vendored by wabi
+pin "@floating-ui/utils", to: "@floating-ui/utils.js" # vendored by wabi
+pin "@floating-ui/utils/dom", to: "@floating-ui/utils/dom.js" # vendored by wabi
