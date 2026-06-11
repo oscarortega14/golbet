@@ -88,9 +88,9 @@ class Views::Admin::Tournaments::Index < Views::Base
   end
 
   def manage_button(t)
-    form(action: select_admin_tournament_path(t), method: "post") do
-      input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-      render Components::UI::Button.new(type: "submit", appearance: :outline) { "Gestionar" }
-    end
+    a(href: admin_tournament_matches_path(t),
+      class: "inline-flex h-10 items-center justify-center rounded-md border border-primary " \
+             "bg-background px-4 text-sm font-medium text-primary transition-colors " \
+             "hover:bg-accent hover:text-accent-foreground") { "Gestionar" }
   end
 end

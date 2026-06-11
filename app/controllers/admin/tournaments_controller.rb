@@ -15,19 +15,13 @@ module Admin
       tournament = Tournament.create!(name: name)
       general_pool_for(tournament) # crea la General pública
       session[:admin_tournament_id] = tournament.id
-      redirect_to admin_tournaments_path, notice: "Torneo \"#{tournament.name}\" creado."
+      redirect_to admin_tournament_matches_path(tournament), notice: "Torneo \"#{tournament.name}\" creado."
     end
 
     def activate
       tournament = Tournament.find(params[:id])
       tournament.activate!
       redirect_to admin_tournaments_path, notice: "\"#{tournament.name}\" es ahora el torneo activo."
-    end
-
-    def select
-      tournament = Tournament.find(params[:id])
-      session[:admin_tournament_id] = tournament.id
-      redirect_to admin_matches_path, notice: "Gestionando \"#{tournament.name}\"."
     end
 
     def import_fixtures

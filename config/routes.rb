@@ -36,12 +36,11 @@ Rails.application.routes.draw do
     resources :tournaments, only: [:index, :create] do
       member do
         patch :activate
-        post  :select
         post  :import_fixtures
       end
+      resources :matches, only: [:index, :edit, :update]
+      resources :results, only: [:index, :update]
+      resource  :resolution, only: [:show, :update]
     end
-    resources :matches, only: [:index, :edit, :update]
-    resources :results, only: [:index, :update]
-    resource :resolution, only: [:show, :update]
   end
 end

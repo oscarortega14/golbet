@@ -11,7 +11,7 @@ class Views::Admin::Resolutions::Show < Views::Base
       page_header("Resolver torneo", "Define el campeón y el goleador para otorgar los bonos.")
       render Components::UI::Card.new(class: "max-w-lg") do
         render Components::UI::CardContent.new(padding: :standalone) do
-          form(action: admin_resolution_path, method: "post", class: "space-y-4") do
+          form(action: admin_tournament_resolution_path(@tournament), method: "post", class: "space-y-4") do
             input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
             input(type: "hidden", name: "_method", value: "patch")
             render Components::UI::Label.new(for_: "champion_team_id") { "Campeón" }

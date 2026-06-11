@@ -19,7 +19,8 @@ class Views::Base < Components::Base
   end
 
   # Renderiza el componente Pagination de Wabi preservando los filtros actuales.
-  # path: helper de ruta (ej. :admin_matches_path); params: hash de filtros a conservar.
+  # path: helper de ruta (ej. :admin_tournament_matches_path); params: hash de filtros
+  # a conservar (incluye tournament_id en las rutas anidadas).
   def admin_pagination(current_page:, total_pages:, path:, params: {})
     return if total_pages <= 1
     href = ->(p) { public_send(path, **params.compact.merge(page: p)) }

@@ -4,10 +4,10 @@ class Views::Admin::Results::Index < Views::Base
   STAGES = Match::STAGES
   GROUPS = ("A".."L").to_a
 
-  def initialize(matches:, filters: {}, current_id: nil, page: 1, total_pages: 1)
+  def initialize(tournament:, matches:, filters: {}, page: 1, total_pages: 1)
+    @tournament  = tournament
     @matches     = matches
     @filters     = filters || {}
-    @current_id  = current_id
     @page        = page
     @total_pages = total_pages
   end
@@ -21,7 +21,8 @@ class Views::Admin::Results::Index < Views::Base
       end
       div(class: "mt-4") do
         admin_pagination(current_page: @page, total_pages: @total_pages,
-                         path: :admin_results_path, params: @filters)
+                         path: :admin_tournament_results_path,
+                         params: @filters.merge("tournament_id" => @tournament.id))
       end
     end
   end
@@ -29,7 +30,7 @@ class Views::Admin::Results::Index < Views::Base
   private
 
   def filter_bar
-    form(method: "get", action: admin_results_path, class: "flex flex-wrap items-end gap-2 mb-4") do
+    form(method: "get", action: admin_tournament_results_path(@tournament), class: "flex flex-wrap items-end gap-2 mb-4") do
       filter_select("stage", "Fase", STAGES, @filters["stage"])
       filter_select("group", "Grupo", GROUPS, @filters["group"])
       render Components::UI::Button.new(type: "submit", appearance: :primary) { "Filtrar" }
@@ -54,7 +55,7 @@ class Views::Admin::Results::Index < Views::Base
   def result_row(match)
     render Components::UI::Card.new do
       render Components::UI::CardContent.new(class: "py-3") do
-        form(action: admin_result_path(match), method: "post", class: "flex items-center gap-2") do
+        form(action: admin_tournament_result_path(@tournament, match), method: "post", class: "flex items-center gap-2") do
           input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
           input(type: "hidden", name: "_method", value: "patch")
           span(class: "flex-1") { matchup(match) }

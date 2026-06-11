@@ -12,47 +12,35 @@ class AdminTournamentScopeTest < ActionDispatch::IntegrationTest
     post admin_login_path, params: { password: "test-admin-pw" }
   end
 
-  test "admin matches defaults to the active tournament" do
-    get admin_matches_path
+  test "the nested matches URL scopes the page to that tournament" do
+    get admin_tournament_matches_path(@copa)
     assert_response :success
-    assert_match "Mundial 2026", response.body
-  end
-
-  test "selecting a tournament scopes the admin matches page to it" do
-    post select_admin_tournament_path(@copa)
-    get admin_matches_path
-    assert_response :success
-    assert_match "Copa América", response.body
+    assert_match "Partidos — Copa América", response.body
     assert_match "Brasil", response.body
     assert_no_match(/Argentina/, response.body)
   end
 
-  test "Gestionar (select) entra a gestionar: redirige a los partidos del torneo" do
-    post select_admin_tournament_path(@copa)
-    assert_redirected_to admin_matches_path
-    follow_redirect!
-    assert_match "Partidos — Copa América", response.body
+  test "Gestionar enlaza a los partidos anidados del torneo" do
+    get admin_tournaments_path
+    assert_response :success
+    assert_select "a[href=?]", admin_tournament_matches_path(@copa)
+    assert_select "a[href=?]", admin_tournament_matches_path(@mundial)
   end
 
-  test "resolution targets the selected tournament" do
-    post select_admin_tournament_path(@copa)
+  test "resolution targets the tournament in the URL" do
     team = @copa.teams.first
-    patch admin_resolution_path, params: { champion_team_id: team.id, top_scorer: "Neymar" }
+    patch admin_tournament_resolution_path(@copa), params: { champion_team_id: team.id, top_scorer: "Neymar" }
     assert_equal team, @copa.reload.champion_team
     assert_nil @mundial.reload.champion_team
   end
 
-  test "the admin_tournament query param persists the selection to the session" do
-    # Selecciona la Copa vía el query param del dropdown (GET), no la acción select
-    get admin_matches_path(admin_tournament: @copa.id)
+  test "visiting a nested page remembers the tournament in session for the sidebar" do
+    # Tras visitar la Copa, el sidebar (que lee la sesión) sigue apuntando a la Copa
+    get admin_tournament_matches_path(@copa)
     assert_response :success
+    get admin_tournaments_path
+    assert_response :success
+    # El switcher del header muestra la Copa como torneo actual
     assert_match "Copa América", response.body
-    assert_match "Brasil", response.body
-
-    # La selección persiste en la sesión: una visita posterior SIN el param sigue mostrando la Copa
-    get admin_matches_path
-    assert_response :success
-    assert_match "Partidos — Copa América", response.body
-    assert_no_match(/Partidos — Mundial 2026/, response.body)
   end
 end

@@ -19,9 +19,13 @@ module Admin
       redirect_to admin_login_path unless session[:admin]
     end
 
+    # Mantiene en sesión el último torneo visitado (desde la URL anidada
+    # /admin/tournaments/:tournament_id/...) para que el sidebar y los fallbacks
+    # apunten al torneo en gestión.
     def remember_admin_tournament
-      if params[:admin_tournament].present? && Tournament.exists?(id: params[:admin_tournament])
-        session[:admin_tournament_id] = params[:admin_tournament].to_i
+      id = params[:tournament_id].presence
+      if id.present? && Tournament.exists?(id: id)
+        session[:admin_tournament_id] = id.to_i
         @current_admin_tournament = nil
       end
     end

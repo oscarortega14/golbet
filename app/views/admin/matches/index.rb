@@ -25,7 +25,7 @@ class Views::Admin::Matches::Index < Views::Base
                 span(class: "text-muted-foreground text-sm") { " — #{m.kickoff_at&.strftime('%d/%m %H:%M')}" }
               end
               render Components::UI::Tooltip.new do
-                a(href: edit_admin_match_path(m), class: "text-sm underline",
+                a(href: edit_admin_tournament_match_path(@tournament, m), class: "text-sm underline",
                   data: { "wabi--tooltip-target": "trigger" }) { "Editar" }
                 render(Components::UI::TooltipContent.new) { "Editar equipos y horario" }
               end
@@ -35,7 +35,8 @@ class Views::Admin::Matches::Index < Views::Base
       end
       div(class: "mt-4") do
         admin_pagination(current_page: @page, total_pages: @total_pages,
-                         path: :admin_matches_path, params: @filters)
+                         path: :admin_tournament_matches_path,
+                         params: @filters.merge("tournament_id" => @tournament.id))
       end
     end
   end
@@ -43,7 +44,7 @@ class Views::Admin::Matches::Index < Views::Base
   private
 
   def filter_bar
-    form(method: "get", action: admin_matches_path, class: "flex flex-wrap items-end gap-2 mb-4") do
+    form(method: "get", action: admin_tournament_matches_path(@tournament), class: "flex flex-wrap items-end gap-2 mb-4") do
       filter_select("stage", "Fase", STAGES, @filters["stage"])
       filter_select("group", "Grupo", GROUPS, @filters["group"])
       render Components::UI::Button.new(type: "submit", appearance: :primary) { "Filtrar" }

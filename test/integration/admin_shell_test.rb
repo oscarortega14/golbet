@@ -17,31 +17,38 @@ class AdminShellTest < ActionDispatch::IntegrationTest
     assert_select "input[type=file][name=?]", "matches_csv"
   end
 
-  test "admin matches page renders the sidebar shell" do
-    get admin_matches_path
+  test "admin matches page renders the sidebar shell with nested nav" do
+    get admin_tournament_matches_path(@tournament)
     assert_response :success
     assert_match "wabi--sidebar", response.body
     assert_match "golbet-admin-sidebar", response.body
     assert_select "a[href=?]", admin_tournaments_path
-    assert_select "a[href=?]", admin_matches_path
-    assert_select "a[href=?]", admin_results_path
-    assert_select "a[href=?]", admin_resolution_path
-    assert_select "a[href=?][aria-current=page]", admin_matches_path
+    assert_select "a[href=?]", admin_tournament_matches_path(@tournament)
+    assert_select "a[href=?]", admin_tournament_results_path(@tournament)
+    assert_select "a[href=?]", admin_tournament_resolution_path(@tournament)
+    assert_select "a[href=?][aria-current=page]", admin_tournament_matches_path(@tournament)
     assert_match "Partidos", response.body
     assert_select "form[action=?]", admin_logout_path
   end
 
+  test "breadcrumb shows Admin / tournament / section on a nested page" do
+    get admin_tournament_matches_path(@tournament)
+    assert_response :success
+    assert_match "Mundial 2026", response.body
+    assert_select "nav[aria-label=?]", "breadcrumb"
+  end
+
   test "results page mounts the shell with results active" do
-    get admin_results_path
+    get admin_tournament_results_path(@tournament)
     assert_response :success
     assert_match "wabi--sidebar", response.body
-    assert_select "a[href=?][aria-current=page]", admin_results_path
+    assert_select "a[href=?][aria-current=page]", admin_tournament_results_path(@tournament)
   end
 
   test "resolution page mounts the shell with resolution active" do
-    get admin_resolution_path
+    get admin_tournament_resolution_path(@tournament)
     assert_response :success
-    assert_select "a[href=?][aria-current=page]", admin_resolution_path
+    assert_select "a[href=?][aria-current=page]", admin_tournament_resolution_path(@tournament)
   end
 
   test "tournaments page mounts the shell with tournaments active" do
@@ -53,10 +60,10 @@ class AdminShellTest < ActionDispatch::IntegrationTest
   test "matches edit form mounts the shell with matches active" do
     m = @tournament.matches.create!(stage: "group", group: "A", kickoff_at: 1.day.from_now,
                                     home_label: "L1", away_label: "L2")
-    get edit_admin_match_path(m)
+    get edit_admin_tournament_match_path(@tournament, m)
     assert_response :success
     assert_match "wabi--sidebar", response.body
-    assert_select "a[href=?][aria-current=page]", admin_matches_path
+    assert_select "a[href=?][aria-current=page]", admin_tournament_matches_path(@tournament)
   end
 
   test "matches index paginates and preserves no filters by default" do
@@ -64,17 +71,17 @@ class AdminShellTest < ActionDispatch::IntegrationTest
       @tournament.matches.create!(stage: "group", group: "A", kickoff_at: (i + 1).days.from_now,
                                   home_label: "L#{i}a", away_label: "L#{i}b")
     end
-    get admin_matches_path
+    get admin_tournament_matches_path(@tournament)
     assert_response :success
     assert_select "nav[aria-label=?] a[href*=?]", "pagination", "page=2"
-    get admin_matches_path(page: 2)
+    get admin_tournament_matches_path(@tournament, page: 2)
     assert_response :success
   end
 
   test "matches list wires tooltips on the edit action" do
     @tournament.matches.create!(stage: "group", group: "A", kickoff_at: 1.day.from_now,
                                 home_label: "L1", away_label: "L2")
-    get admin_matches_path
+    get admin_tournament_matches_path(@tournament)
     assert_response :success
     assert_match "wabi--tooltip", response.body
     assert_match "Editar equipos y horario", response.body
@@ -85,7 +92,7 @@ class AdminShellTest < ActionDispatch::IntegrationTest
       @tournament.matches.create!(stage: "group", group: "A", kickoff_at: (i + 1).days.from_now,
                                   home_label: "G#{i}a", away_label: "G#{i}b")
     end
-    get admin_matches_path(stage: "group", group: "A")
+    get admin_tournament_matches_path(@tournament, stage: "group", group: "A")
     assert_response :success
     # The page-2 link must carry the active filters forward
     assert_select "nav[aria-label=?] a[href*=?]", "pagination", "stage=group"

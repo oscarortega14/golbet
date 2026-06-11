@@ -1,8 +1,8 @@
 module Admin
   class ResultsController < BaseController
     def index
-      tournament = current_admin_tournament
-      scope = tournament ? tournament.matches.includes(:home_team, :away_team).order(:kickoff_at) : Match.none
+      tournament = Tournament.find(params[:tournament_id])
+      scope = tournament.matches.includes(:home_team, :away_team).order(:kickoff_at)
       scope = scope.where(stage: params[:stage]) if params[:stage].present?
       scope = scope.where(group: params[:group]) if params[:group].present?
 
@@ -14,24 +14,25 @@ module Admin
       matches = scope.limit(per).offset((page - 1) * per)
 
       render Views::Admin::Results::Index.new(
-        matches: matches, filters: params.slice(:stage, :group).to_unsafe_h,
-        current_id: tournament&.id, page: page, total_pages: total_pages
+        tournament: tournament, matches: matches, filters: params.slice(:stage, :group).to_unsafe_h,
+        page: page, total_pages: total_pages
       )
     end
 
     def update
-      match = Match.find(params[:id])
+      tournament = Tournament.find(params[:tournament_id])
+      match = tournament.matches.find(params[:id])
       if params[:home_score].blank? || params[:away_score].blank?
         flash[:alert] = "Marcador inválido"
-        return redirect_to admin_results_path
+        return redirect_to admin_tournament_results_path(tournament)
       end
       match.assign_attributes(home_score: params[:home_score], away_score: params[:away_score], status: "finished")
       if match.save
-        redirect_to admin_results_path
+        redirect_to admin_tournament_results_path(tournament)
       else
         match.restore_attributes
         flash[:alert] = match.errors.full_messages.first || "Marcador inválido"
-        redirect_to admin_results_path
+        redirect_to admin_tournament_results_path(tournament)
       end
     end
   end

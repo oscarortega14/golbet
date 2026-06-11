@@ -11,11 +11,11 @@ module Admin
         champion_team_id: params[:champion_team_id].presence,
         top_scorer: params[:top_scorer].presence
       )
-      redirect_to admin_resolution_path, notice: "Resultado del torneo guardado."
+      redirect_to admin_tournament_resolution_path(tournament), notice: "Resultado del torneo guardado."
     end
 
     private
 
-    def tournament = current_admin_tournament
+    def tournament = @tournament ||= Tournament.find(params[:tournament_id])
   end
 end

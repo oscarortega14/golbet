@@ -2,17 +2,18 @@
 
 class Views::AdminLayout < Views::Base
   # active: :tournaments | :matches | :results | :resolution
-  # crumbs: array de [label, href] de ancestros entre "Admin" y la página actual
+  # Las secciones Partidos/Resultados/Resolución viven anidadas bajo el torneo
+  # actual (/admin/tournaments/:id/...), así la URL siempre dice de qué torneo se
+  # trata. "Torneos" es la lista raíz (plana).
   NAV = [
-    [:tournaments, "Torneos",    "🏆", :admin_tournaments_path],
-    [:matches,     "Partidos",   "📅", :admin_matches_path],
-    [:results,     "Resultados", "✅", :admin_results_path],
-    [:resolution,  "Resolución", "🏅", :admin_resolution_path],
+    [:tournaments, "Torneos",    "🏆"],
+    [:matches,     "Partidos",   "📅"],
+    [:results,     "Resultados", "✅"],
+    [:resolution,  "Resolución", "🏅"],
   ].freeze
 
-  def initialize(active:, crumbs: [])
-    @active  = active
-    @crumbs  = crumbs
+  def initialize(active:)
+    @active = active
   end
 
   def view_template(&block)
@@ -41,8 +42,28 @@ class Views::AdminLayout < Views::Base
     @current_tournament ||= helpers.current_admin_tournament
   end
 
+  def section_label
+    NAV.find { |k,| k == @active }&.at(1) || "Admin"
+  end
+
+  # Ruta de cada item del menú. "Torneos" es plana; el resto se anida bajo el
+  # torneo actual (nil si todavía no hay torneos → el item queda no-clickable).
   def nav_href(key)
-    public_send(NAV.find { |k,| k == key }[3])
+    case key
+    when :tournaments then admin_tournaments_path
+    when :matches     then current_tournament && admin_tournament_matches_path(current_tournament)
+    when :results     then current_tournament && admin_tournament_results_path(current_tournament)
+    when :resolution  then current_tournament && admin_tournament_resolution_path(current_tournament)
+    end
+  end
+
+  # Al cambiar de torneo en el header, conserva la sección en la que estás.
+  def switch_href(t)
+    case @active
+    when :results    then admin_tournament_results_path(t)
+    when :resolution then admin_tournament_resolution_path(t)
+    else                  admin_tournament_matches_path(t)
+    end
   end
 
   # --- Header: marca + selector de torneo (DropdownMenu) ---
@@ -60,8 +81,7 @@ class Views::AdminLayout < Views::Base
           render(Components::UI::DropdownMenuLabel.new) { "Cambiar torneo" }
           tournaments.each do |t|
             render Components::UI::DropdownMenuItem.new(value: "tournament-#{t.id}") do
-              a(href: public_send(NAV.find { |k,| k == (@active || :matches) }[3], admin_tournament: t.id),
-                class: "flex w-full items-center justify-between gap-2") do
+              a(href: switch_href(t), class: "flex w-full items-center justify-between gap-2") do
                 span { t.name }
                 render(Components::UI::Badge.new(appearance: :primary)) { "Activo" } if t.active?
               end
@@ -77,7 +97,7 @@ class Views::AdminLayout < Views::Base
     render Components::UI::SidebarContent.new do
       render Components::UI::SidebarGroup.new(label: "Gestión") do
         render Components::UI::SidebarMenu.new do
-          NAV.each do |key, label, icon, _path|
+          NAV.each do |key, label, icon|
             render Components::UI::SidebarMenuItem.new do
               render Components::UI::SidebarMenuButton.new(
                 href: nav_href(key), active: @active == key, tooltip: label
@@ -131,24 +151,40 @@ class Views::AdminLayout < Views::Base
     end
   end
 
+  # Admin / Torneos                      (en la lista)
+  # Admin / <torneo> / <sección>         (en una sección anidada)
   def breadcrumbs
-    current_label = NAV.find { |k,| k == @active }&.at(1) || "Admin"
     render Components::UI::Breadcrumb.new do
       render Components::UI::BreadcrumbList.new do
-        render Components::UI::BreadcrumbItem.new do
-          render(Components::UI::BreadcrumbLink.new(href: admin_matches_path)) { "Admin" }
-        end
-        @crumbs.each do |label, href|
-          render Components::UI::BreadcrumbSeparator.new
-          render Components::UI::BreadcrumbItem.new do
-            render(Components::UI::BreadcrumbLink.new(href: href)) { label }
+        crumb_link("Admin", admin_tournaments_path)
+        if @active == :tournaments
+          crumb_sep
+          crumb_page("Torneos")
+        else
+          if (t = current_tournament)
+            crumb_sep
+            crumb_link(t.name, admin_tournament_matches_path(t))
           end
-        end
-        render Components::UI::BreadcrumbSeparator.new
-        render Components::UI::BreadcrumbItem.new do
-          render(Components::UI::BreadcrumbPage.new) { current_label }
+          crumb_sep
+          crumb_page(section_label)
         end
       end
     end
+  end
+
+  def crumb_link(label, href)
+    render Components::UI::BreadcrumbItem.new do
+      render(Components::UI::BreadcrumbLink.new(href: href)) { label }
+    end
+  end
+
+  def crumb_page(label)
+    render Components::UI::BreadcrumbItem.new do
+      render(Components::UI::BreadcrumbPage.new) { label }
+    end
+  end
+
+  def crumb_sep
+    render Components::UI::BreadcrumbSeparator.new
   end
 end

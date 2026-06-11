@@ -10,7 +10,7 @@ class Views::Admin::Matches::Form < Views::Base
     render Views::AdminLayout.new(active: :matches) do
       render Components::UI::Card.new(class: "max-w-lg mx-auto") do
         render Components::UI::CardContent.new(padding: :standalone) do
-          form(action: admin_match_path(@match), method: "post", class: "space-y-4") do
+          form(action: admin_tournament_match_path(@match.tournament, @match), method: "post", class: "space-y-4") do
             input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
             input(type: "hidden", name: "_method", value: "patch")
             p(class: "text-sm text-muted-foreground") { "#{@match.stage} · #{@match.home_label} / #{@match.away_label}" }

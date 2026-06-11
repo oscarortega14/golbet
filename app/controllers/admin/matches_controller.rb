@@ -1,8 +1,8 @@
 module Admin
   class MatchesController < BaseController
     def index
-      @tournament = current_admin_tournament
-      scope = @tournament ? @tournament.matches.includes(:home_team, :away_team).order(:kickoff_at) : Match.none
+      @tournament = Tournament.find(params[:tournament_id])
+      scope = @tournament.matches.includes(:home_team, :away_team).order(:kickoff_at)
       scope = scope.where(stage: params[:stage]) if params[:stage].present?
       scope = scope.where(group: params[:group]) if params[:group].present?
 
@@ -21,13 +21,15 @@ module Admin
     end
 
     def edit
-      render Views::Admin::Matches::Form.new(match: Match.find(params[:id]), teams: teams)
+      @tournament = Tournament.find(params[:tournament_id])
+      render Views::Admin::Matches::Form.new(match: @tournament.matches.find(params[:id]), teams: teams)
     end
 
     def update
-      match = Match.find(params[:id])
+      @tournament = Tournament.find(params[:tournament_id])
+      match = @tournament.matches.find(params[:id])
       if match.update(match_params)
-        redirect_to admin_matches_path
+        redirect_to admin_tournament_matches_path(@tournament)
       else
         render Views::Admin::Matches::Form.new(match: match, teams: teams), status: :unprocessable_entity
       end
@@ -35,7 +37,7 @@ module Admin
 
     private
 
-    def teams = (current_admin_tournament&.teams&.order(:group, :name) || [])
+    def teams = (@tournament&.teams&.order(:group, :name) || [])
 
     def match_params
       params.require(:match).permit(:home_team_id, :away_team_id, :kickoff_at, :stage, :group)

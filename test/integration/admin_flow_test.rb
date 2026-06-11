@@ -13,13 +13,13 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     assert_match "Contraseña incorrecta", response.body
   end
 
-  test "correct password reaches matches admin" do
+  test "correct password reaches the tournaments admin" do
     post admin_login_path, params: { password: "test-admin-pw" }
-    assert_redirected_to admin_matches_path
+    assert_redirected_to admin_tournaments_path
   end
 
   test "admin pages require login" do
-    get admin_matches_path
+    get admin_tournament_matches_path(@tournament)
     assert_redirected_to admin_login_path
   end
 
@@ -27,7 +27,7 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     ko = @tournament.matches.create!(stage: "round_of_32", slot: 1, kickoff_at: 1.day.from_now,
                                      home_label: "R32 #1 — Local", away_label: "R32 #1 — Visitante")
     post admin_login_path, params: { password: "test-admin-pw" }
-    patch admin_match_path(ko), params: { match: { home_team_id: @arg.id, away_team_id: @bra.id } }
+    patch admin_tournament_match_path(@tournament, ko), params: { match: { home_team_id: @arg.id, away_team_id: @bra.id } }
     ko.reload
     assert ko.teams_set?
     assert_equal "ARG", ko.home_team.code
@@ -40,8 +40,8 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     Prediction.new(player: ana, match: m, pool: pool, home_pred: 2, away_pred: 1).save!(validate: false)
 
     post admin_login_path, params: { password: "test-admin-pw" }
-    patch admin_result_path(m), params: { home_score: 2, away_score: 1 }
-    assert_redirected_to admin_results_path
+    patch admin_tournament_result_path(@tournament, m), params: { home_score: 2, away_score: 1 }
+    assert_redirected_to admin_tournament_results_path(@tournament)
 
     m.reload
     assert m.finished?
@@ -50,7 +50,7 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
 
   test "results admin page lists matches" do
     post admin_login_path, params: { password: "test-admin-pw" }
-    get admin_results_path
+    get admin_tournament_results_path(@tournament)
     assert_response :success
   end
 
@@ -60,7 +60,7 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     begin
       post admin_login_path, params: { password: "" }
       assert_response :unauthorized
-      get admin_matches_path
+      get admin_tournament_matches_path(@tournament)
       assert_redirected_to admin_login_path
     ensure
       Rails.application.config.x.admin_password = original
@@ -70,7 +70,7 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
   test "finishing a match with blank scores is rejected, match stays scheduled" do
     m = @tournament.matches.create!(home_team: @arg, away_team: @bra, stage: "group", group: "A", kickoff_at: 1.hour.ago)
     post admin_login_path, params: { password: "test-admin-pw" }
-    patch admin_result_path(m), params: { home_score: "", away_score: "" }
+    patch admin_tournament_result_path(@tournament, m), params: { home_score: "", away_score: "" }
     m.reload
     assert_not m.finished?, "match should not be finished with blank scores"
   end
@@ -79,7 +79,7 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     post admin_login_path, params: { password: "test-admin-pw" }
     delete admin_logout_path
     assert_redirected_to admin_login_path
-    get admin_matches_path
+    get admin_tournament_matches_path(@tournament)
     assert_redirected_to admin_login_path
   end
 end
