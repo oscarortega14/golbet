@@ -27,7 +27,7 @@ module Admin
     def select
       tournament = Tournament.find(params[:id])
       session[:admin_tournament_id] = tournament.id
-      redirect_back fallback_location: admin_tournaments_path
+      redirect_to admin_matches_path, notice: "Gestionando \"#{tournament.name}\"."
     end
 
     def import_fixtures

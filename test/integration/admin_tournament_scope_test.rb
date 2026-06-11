@@ -27,6 +27,13 @@ class AdminTournamentScopeTest < ActionDispatch::IntegrationTest
     assert_no_match(/Argentina/, response.body)
   end
 
+  test "Gestionar (select) entra a gestionar: redirige a los partidos del torneo" do
+    post select_admin_tournament_path(@copa)
+    assert_redirected_to admin_matches_path
+    follow_redirect!
+    assert_match "Partidos — Copa América", response.body
+  end
+
   test "resolution targets the selected tournament" do
     post select_admin_tournament_path(@copa)
     team = @copa.teams.first
