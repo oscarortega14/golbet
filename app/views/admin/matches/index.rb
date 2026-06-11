@@ -11,9 +11,8 @@ class Views::Admin::Matches::Index < Views::Base
   end
 
   def view_template
-    render Views::Layout.new(active: nil) do
+    render Views::AdminLayout.new(active: :matches) do
       h2(class: "text-xl font-semibold mb-4") { "Partidos — #{@tournament&.name}" }
-      admin_tournament_selector(Tournament.order(active: :desc, name: :asc).to_a, @tournament&.id)
       filter_bar
       div(class: "space-y-2") do
         @matches.each do |m|
