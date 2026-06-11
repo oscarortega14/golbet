@@ -25,9 +25,8 @@ class Views::Admin::Matches::Index < Views::Base
                 span(class: "text-muted-foreground text-sm") { " — #{m.kickoff_at&.strftime('%d/%m %H:%M')}" }
               end
               render Components::UI::Tooltip.new do
-                render Components::UI::TooltipTrigger.new do
-                  a(href: edit_admin_match_path(m), class: "text-sm underline") { "Editar" }
-                end
+                a(href: edit_admin_match_path(m), class: "text-sm underline",
+                  data: { "wabi--tooltip-target": "trigger" }) { "Editar" }
                 render(Components::UI::TooltipContent.new) { "Editar equipos y horario" }
               end
             end
