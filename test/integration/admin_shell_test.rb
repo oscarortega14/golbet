@@ -70,6 +70,19 @@ class AdminShellTest < ActionDispatch::IntegrationTest
     assert_match "Editar equipos y horario", response.body
   end
 
+  test "matches pagination preserves stage and group filters in page links" do
+    25.times do |i|
+      @tournament.matches.create!(stage: "group", group: "A", kickoff_at: (i + 1).days.from_now,
+                                  home_label: "G#{i}a", away_label: "G#{i}b")
+    end
+    get admin_matches_path(stage: "group", group: "A")
+    assert_response :success
+    # The page-2 link must carry the active filters forward
+    assert_select "nav[aria-label=?] a[href*=?]", "pagination", "stage=group"
+    assert_select "nav[aria-label=?] a[href*=?]", "pagination", "group=A"
+    assert_select "nav[aria-label=?] a[href*=?]", "pagination", "page=2"
+  end
+
   test "login page does NOT mount the sidebar shell" do
     delete admin_logout_path
     get admin_login_path

@@ -60,7 +60,7 @@ class Views::AdminLayout < Views::Base
           render(Components::UI::DropdownMenuLabel.new) { "Cambiar torneo" }
           tournaments.each do |t|
             render Components::UI::DropdownMenuItem.new(value: "tournament-#{t.id}") do
-              a(href: nav_href(@active || :matches) + "?admin_tournament=#{t.id}",
+              a(href: public_send(NAV.find { |k,| k == (@active || :matches) }[3], admin_tournament: t.id),
                 class: "flex w-full items-center justify-between gap-2") do
                 span { t.name }
                 render(Components::UI::Badge.new(appearance: :primary)) { "Activo" } if t.active?
