@@ -24,7 +24,12 @@ class Views::Admin::Matches::Index < Views::Base
                 plain "#{m.display_home} vs #{m.display_away}"
                 span(class: "text-muted-foreground text-sm") { " — #{m.kickoff_at&.strftime('%d/%m %H:%M')}" }
               end
-              a(href: edit_admin_match_path(m), class: "text-sm underline") { "Editar" }
+              render Components::UI::Tooltip.new do
+                render Components::UI::TooltipTrigger.new do
+                  a(href: edit_admin_match_path(m), class: "text-sm underline") { "Editar" }
+                end
+                render(Components::UI::TooltipContent.new) { "Editar equipos y horario" }
+              end
             end
           end
         end
