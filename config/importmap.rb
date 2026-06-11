@@ -29,3 +29,6 @@ pin "@zag-js/interact-outside", to: "@zag-js/interact-outside.js" # vendored by 
 pin "@floating-ui/core", to: "@floating-ui/core.js" # vendored by wabi
 pin "@floating-ui/utils", to: "@floating-ui/utils.js" # vendored by wabi
 pin "@floating-ui/utils/dom", to: "@floating-ui/utils/dom.js" # vendored by wabi
+pin "@zag-js/file-upload", to: "@zag-js/file-upload.js" # vendored by wabi
+pin "@zag-js/file-utils", to: "@zag-js/file-utils.js" # vendored by wabi
+pin "@zag-js/i18n-utils", to: "@zag-js/i18n-utils.js" # vendored by wabi
