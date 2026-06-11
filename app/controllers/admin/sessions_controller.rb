@@ -14,5 +14,10 @@ module Admin
         render Views::Admin::Login.new(error: "Contraseña incorrecta"), status: :unauthorized
       end
     end
+
+    def destroy
+      session.delete(:admin)
+      redirect_to admin_login_path, notice: "Sesión cerrada"
+    end
   end
 end

@@ -74,4 +74,12 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     m.reload
     assert_not m.finished?, "match should not be finished with blank scores"
   end
+
+  test "admin can log out and loses access" do
+    post admin_login_path, params: { password: "test-admin-pw" }
+    delete admin_logout_path
+    assert_redirected_to admin_login_path
+    get admin_matches_path
+    assert_redirected_to admin_login_path
+  end
 end
