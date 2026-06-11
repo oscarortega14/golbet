@@ -71,4 +71,4 @@ end
 
 # UI: Phlex components + Wabi component library
 gem "phlex-rails"
-gem "wabi", "~> 0.30"
+gem "wabi", "~> 1.0"
