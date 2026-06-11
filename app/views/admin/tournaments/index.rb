@@ -52,17 +52,29 @@ class Views::Admin::Tournaments::Index < Views::Base
     details(class: "text-sm") do
       summary(class: "cursor-pointer text-muted-foreground") { "Cargar fixtures (CSV)" }
       form(action: import_fixtures_admin_tournament_path(t), method: "post",
-           enctype: "multipart/form-data", class: "mt-2 flex flex-wrap items-end gap-2") do
+           enctype: "multipart/form-data", class: "mt-2 grid gap-3 sm:grid-cols-2") do
         input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-        div(class: "space-y-1") do
-          render(Components::UI::Label.new(for_: "teams_csv_#{t.id}")) { "Equipos" }
-          input(type: "file", name: "teams_csv", id: "teams_csv_#{t.id}", accept: ".csv")
+        csv_upload("teams_csv", "Equipos")
+        csv_upload("matches_csv", "Partidos")
+        div(class: "sm:col-span-2") do
+          render Components::UI::Button.new(type: "submit", appearance: :secondary) { "Importar" }
         end
-        div(class: "space-y-1") do
-          render(Components::UI::Label.new(for_: "matches_csv_#{t.id}")) { "Partidos" }
-          input(type: "file", name: "matches_csv", id: "matches_csv_#{t.id}", accept: ".csv")
+      end
+    end
+  end
+
+  # Wabi FileUpload (dropzone + trigger + lista). El controller sincroniza los
+  # archivos elegidos al <input type=file name=...> oculto, así el form multipart
+  # los envía igual que un input nativo.
+  def csv_upload(field, label_text)
+    div(class: "space-y-1.5") do
+      render(Components::UI::Label.new) { label_text }
+      render Components::UI::FileUpload.new(name: field, accept: ".csv", max_files: 1) do
+        render Components::UI::FileUploadDropzone.new do
+          span { "Arrastra el CSV o " }
+          render(Components::UI::FileUploadTrigger.new) { "elige un archivo" }
         end
-        render Components::UI::Button.new(type: "submit", appearance: :secondary) { "Importar" }
+        render Components::UI::FileUploadList.new
       end
     end
   end

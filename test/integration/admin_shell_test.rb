@@ -7,6 +7,16 @@ class AdminShellTest < ActionDispatch::IntegrationTest
     post admin_login_path, params: { password: "test-admin-pw" }
   end
 
+  test "tournaments fixtures uploader uses Wabi FileUpload with submittable inputs" do
+    get admin_tournaments_path
+    assert_response :success
+    # El componente FileUpload monta el controller y un dropzone
+    assert_match "wabi--file-upload", response.body
+    # Los inputs ocultos conservan los names que espera el controller de import
+    assert_select "input[type=file][name=?]", "teams_csv"
+    assert_select "input[type=file][name=?]", "matches_csv"
+  end
+
   test "admin matches page renders the sidebar shell" do
     get admin_matches_path
     assert_response :success
