@@ -6,10 +6,10 @@ class Views::Admin::Login < Views::Base
   end
 
   def view_template
-    render Views::Layout.new(active: nil) do
-      render Components::UI::Card.new(class: "max-w-md mx-auto mt-16") do
+    div(class: "flex min-h-screen items-center justify-center bg-background p-4") do
+      render Components::UI::Card.new(class: "w-full max-w-md") do
         render Components::UI::CardHeader.new do
-          render Components::UI::CardTitle.new { "Admin" }
+          render Components::UI::CardTitle.new { "Golbet · Admin" }
         end
         render Components::UI::CardContent.new do
           if @error

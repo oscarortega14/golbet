@@ -11,8 +11,7 @@ class Views::Admin::Results::Index < Views::Base
   end
 
   def view_template
-    render Views::Layout.new(active: nil) do
-      admin_tournament_selector(Tournament.order(active: :desc, name: :asc).to_a, @current_id)
+    render Views::AdminLayout.new(active: :results) do
       h2(class: "text-xl font-semibold mb-4") { "Cargar resultados" }
       filter_bar
       div(class: "space-y-2") do

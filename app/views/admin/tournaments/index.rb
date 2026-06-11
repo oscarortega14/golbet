@@ -7,7 +7,7 @@ class Views::Admin::Tournaments::Index < Views::Base
   end
 
   def view_template
-    render Views::Layout.new(active: nil) do
+    render Views::AdminLayout.new(active: :tournaments) do
       h2(class: "text-xl font-semibold mb-4") { "Torneos" }
       create_form
       div(class: "space-y-2") { @tournaments.each { |t| tournament_row(t) } }

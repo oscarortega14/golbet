@@ -7,7 +7,7 @@ class Views::Admin::Matches::Form < Views::Base
   end
 
   def view_template
-    render Views::Layout.new(active: nil) do
+    render Views::AdminLayout.new(active: :matches) do
       render Components::UI::Card.new(class: "max-w-lg mx-auto") do
         render Components::UI::CardContent.new(padding: :standalone) do
           form(action: admin_match_path(@match), method: "post", class: "space-y-4") do
