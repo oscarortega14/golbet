@@ -18,6 +18,32 @@ class Views::Base < Components::Base
     end
   end
 
+  # Renderiza el componente Pagination de Wabi preservando los filtros actuales.
+  # path: helper de ruta (ej. :admin_matches_path); params: hash de filtros a conservar.
+  def admin_pagination(current_page:, total_pages:, path:, params: {})
+    return if total_pages <= 1
+    href = ->(p) { public_send(path, **params.compact.merge(page: p)) }
+    render Components::UI::Pagination.new do
+      render Components::UI::PaginationContent.new do
+        if current_page > 1
+          render Components::UI::PaginationItem.new do
+            render Components::UI::PaginationPrevious.new(href: href.call(current_page - 1))
+          end
+        end
+        (1..total_pages).each do |p|
+          render Components::UI::PaginationItem.new do
+            render(Components::UI::PaginationLink.new(active: p == current_page, href: href.call(p))) { p.to_s }
+          end
+        end
+        if current_page < total_pages
+          render Components::UI::PaginationItem.new do
+            render Components::UI::PaginationNext.new(href: href.call(current_page + 1))
+          end
+        end
+      end
+    end
+  end
+
   # Selector de torneo para las páginas de admin (cambia session[:admin_tournament_id]).
   def admin_tournament_selector(tournaments, current_id)
     return if tournaments.size <= 1

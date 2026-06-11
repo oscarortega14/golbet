@@ -49,6 +49,18 @@ class AdminShellTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?][aria-current=page]", admin_matches_path
   end
 
+  test "matches index paginates and preserves no filters by default" do
+    25.times do |i|
+      @tournament.matches.create!(stage: "group", group: "A", kickoff_at: (i + 1).days.from_now,
+                                  home_label: "L#{i}a", away_label: "L#{i}b")
+    end
+    get admin_matches_path
+    assert_response :success
+    assert_select "nav[aria-label=?] a[href*=?]", "pagination", "page=2"
+    get admin_matches_path(page: 2)
+    assert_response :success
+  end
+
   test "login page does NOT mount the sidebar shell" do
     delete admin_logout_path
     get admin_login_path

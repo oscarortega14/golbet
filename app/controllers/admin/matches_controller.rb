@@ -5,7 +5,19 @@ module Admin
       scope = @tournament ? @tournament.matches.includes(:home_team, :away_team).order(:kickoff_at) : Match.none
       scope = scope.where(stage: params[:stage]) if params[:stage].present?
       scope = scope.where(group: params[:group]) if params[:group].present?
-      render Views::Admin::Matches::Index.new(tournament: @tournament, matches: scope, filters: params.slice(:stage, :group).to_unsafe_h)
+
+      per   = 20
+      page  = [params[:page].to_i, 1].max
+      total = scope.count
+      total_pages = [(total.to_f / per).ceil, 1].max
+      page  = [page, total_pages].min
+      matches = scope.limit(per).offset((page - 1) * per)
+
+      render Views::Admin::Matches::Index.new(
+        tournament: @tournament, matches: matches,
+        filters: params.slice(:stage, :group).to_unsafe_h,
+        page: page, total_pages: total_pages
+      )
     end
 
     def edit

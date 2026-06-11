@@ -4,10 +4,12 @@ class Views::Admin::Matches::Index < Views::Base
   STAGES = Match::STAGES
   GROUPS = ("A".."L").to_a
 
-  def initialize(tournament:, matches:, filters: {})
-    @tournament = tournament
-    @matches = matches
-    @filters = filters || {}
+  def initialize(tournament:, matches:, filters: {}, page: 1, total_pages: 1)
+    @tournament  = tournament
+    @matches     = matches
+    @filters     = filters || {}
+    @page        = page
+    @total_pages = total_pages
   end
 
   def view_template
@@ -26,6 +28,10 @@ class Views::Admin::Matches::Index < Views::Base
             end
           end
         end
+      end
+      div(class: "mt-4") do
+        admin_pagination(current_page: @page, total_pages: @total_pages,
+                         path: :admin_matches_path, params: @filters)
       end
     end
   end

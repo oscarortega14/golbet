@@ -4,10 +4,12 @@ class Views::Admin::Results::Index < Views::Base
   STAGES = Match::STAGES
   GROUPS = ("A".."L").to_a
 
-  def initialize(matches:, filters: {}, current_id: nil)
-    @matches = matches
-    @filters = filters || {}
-    @current_id = current_id
+  def initialize(matches:, filters: {}, current_id: nil, page: 1, total_pages: 1)
+    @matches     = matches
+    @filters     = filters || {}
+    @current_id  = current_id
+    @page        = page
+    @total_pages = total_pages
   end
 
   def view_template
@@ -16,6 +18,10 @@ class Views::Admin::Results::Index < Views::Base
       filter_bar
       div(class: "space-y-2") do
         @matches.each { |m| result_row(m) }
+      end
+      div(class: "mt-4") do
+        admin_pagination(current_page: @page, total_pages: @total_pages,
+                         path: :admin_results_path, params: @filters)
       end
     end
   end
