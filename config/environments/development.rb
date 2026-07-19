@@ -7,7 +7,7 @@ Rails.application.configure do
   config.enable_reloading = true
 
   # Admin password (Task 11).
-  config.x.admin_password = ENV.fetch("ADMIN_PASSWORD", "cambia-esto")
+  config.x.admin_password = ENV.fetch("ADMIN_PASSWORD")
 
   # Do not eager load code on boot.
   config.eager_load = false

@@ -61,6 +61,8 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
   gem "letter_opener"
+  # Loads .env into ENV early on boot so ADMIN_PASSWORD (and friends) are available.
+  gem "dotenv-rails"
 end
 
 group :test do
