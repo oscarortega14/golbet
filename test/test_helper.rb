@@ -1,4 +1,10 @@
 ENV["RAILS_ENV"] ||= "test"
+
+# En macOS, libpq inicializa GSSAPI/Kerberos (frameworks que no son fork-safe),
+# lo que cuelga la paralelización de tests (parallelize hace fork). Deshabilitar
+# el cifrado GSS en la conexión evita que se cargue ese framework antes del fork.
+ENV["PGGSSENCMODE"] ||= "disable"
+
 require_relative "../config/environment"
 require "rails/test_help"
 

@@ -10,11 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_06_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_06_000003) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "match_reminders", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "match_id", null: false
-    t.integer "player_id", null: false
+    t.bigint "match_id", null: false
+    t.bigint "player_id", null: false
     t.datetime "sent_at", null: false
     t.datetime "updated_at", null: false
     t.index ["match_id"], name: "index_match_reminders_on_match_id"
@@ -25,17 +28,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_06_000002) do
   create_table "matches", force: :cascade do |t|
     t.string "away_label"
     t.integer "away_score"
-    t.integer "away_team_id"
+    t.bigint "away_team_id"
     t.datetime "created_at", null: false
     t.string "group"
     t.string "home_label"
     t.integer "home_score"
-    t.integer "home_team_id"
+    t.bigint "home_team_id"
     t.datetime "kickoff_at"
     t.integer "slot"
     t.string "stage", default: "group", null: false
     t.string "status"
-    t.integer "tournament_id", null: false
+    t.bigint "tournament_id", null: false
     t.datetime "updated_at", null: false
     t.index ["away_team_id"], name: "index_matches_on_away_team_id"
     t.index ["home_team_id"], name: "index_matches_on_home_team_id"
@@ -44,8 +47,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_06_000002) do
 
   create_table "memberships", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "player_id", null: false
-    t.integer "pool_id", null: false
+    t.bigint "player_id", null: false
+    t.bigint "pool_id", null: false
     t.datetime "updated_at", null: false
     t.index ["player_id", "pool_id"], name: "index_memberships_on_player_id_and_pool_id", unique: true
     t.index ["player_id"], name: "index_memberships_on_player_id"
@@ -68,23 +71,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_06_000002) do
     t.integer "champion_bonus", default: 15, null: false
     t.datetime "created_at", null: false
     t.integer "exact_points", default: 3, null: false
-    t.integer "focus_match_id"
+    t.bigint "focus_match_id"
     t.string "invite_token", null: false
     t.boolean "knockout_multipliers", default: true, null: false
     t.string "modality", default: "stages", null: false
     t.string "name", null: false
     t.integer "outcome_points", default: 1, null: false
-    t.integer "owner_id"
+    t.bigint "owner_id"
     t.boolean "public", default: false, null: false
     t.boolean "special_enabled", default: true, null: false
     t.text "stages"
     t.integer "top_scorer_bonus", default: 10, null: false
-    t.integer "tournament_id", null: false
+    t.bigint "tournament_id", null: false
     t.datetime "updated_at", null: false
     t.index ["focus_match_id"], name: "index_pools_on_focus_match_id"
     t.index ["invite_token"], name: "index_pools_on_invite_token", unique: true
     t.index ["owner_id"], name: "index_pools_on_owner_id"
-    t.index ["tournament_id"], name: "index_pools_on_general_per_tournament", unique: true, where: "public = 1"
+    t.index ["tournament_id"], name: "index_pools_on_general_per_tournament", unique: true, where: "(public = true)"
     t.index ["tournament_id"], name: "index_pools_on_tournament_id"
   end
 
@@ -92,9 +95,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_06_000002) do
     t.integer "away_pred"
     t.datetime "created_at", null: false
     t.integer "home_pred"
-    t.integer "match_id", null: false
-    t.integer "player_id", null: false
-    t.integer "pool_id", null: false
+    t.bigint "match_id", null: false
+    t.bigint "player_id", null: false
+    t.bigint "pool_id", null: false
     t.datetime "updated_at", null: false
     t.index ["match_id"], name: "index_predictions_on_match_id"
     t.index ["player_id", "pool_id", "match_id"], name: "index_predictions_on_player_id_and_pool_id_and_match_id", unique: true
@@ -103,10 +106,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_06_000002) do
   end
 
   create_table "special_predictions", force: :cascade do |t|
-    t.integer "champion_team_id"
+    t.bigint "champion_team_id"
     t.datetime "created_at", null: false
-    t.integer "player_id", null: false
-    t.integer "pool_id", null: false
+    t.bigint "player_id", null: false
+    t.bigint "pool_id", null: false
     t.string "top_scorer"
     t.datetime "updated_at", null: false
     t.index ["champion_team_id"], name: "index_special_predictions_on_champion_team_id"
@@ -121,7 +124,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_06_000002) do
     t.string "flag"
     t.string "group", null: false
     t.string "name", null: false
-    t.integer "tournament_id", null: false
+    t.bigint "tournament_id", null: false
     t.datetime "updated_at", null: false
     t.index ["tournament_id", "code"], name: "index_teams_on_tournament_id_and_code", unique: true
     t.index ["tournament_id"], name: "index_teams_on_tournament_id"
@@ -129,7 +132,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_06_000002) do
 
   create_table "tournaments", force: :cascade do |t|
     t.boolean "active", default: false, null: false
-    t.integer "champion_team_id"
+    t.bigint "champion_team_id"
     t.datetime "created_at", null: false
     t.string "name"
     t.string "top_scorer"

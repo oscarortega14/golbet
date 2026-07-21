@@ -1,0 +1,24 @@
+# Postgres para desarrollo/test local.
+# Levanta con: docker compose up -d
+# La app se conecta a 127.0.0.1:5441 (ver config/database.yml y .env).
+services:
+  postgres:
+    image: postgres:16
+    container_name: golbet_postgres
+    restart: unless-stopped
+    ports:
+      - "5441:5432"
+    environment:
+      POSTGRES_USER: golbet
+      POSTGRES_PASSWORD: golbet
+      POSTGRES_DB: golbet_development
+    volumes:
+      - golbet_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U golbet -d golbet_development"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  golbet_pgdata:
